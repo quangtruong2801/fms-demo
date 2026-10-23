@@ -9,8 +9,14 @@ import {
   MutexGroup,
   TaskLogEntry,
 } from '../types/rmf';
+import airportBuildingMapData from '../data/airportBuildingMap.json';
+import airportFleetsData from '../data/airportFleets.json';
 
-export const INITIAL_BUILDING_MAP: BuildingMap = {
+export const INITIAL_BUILDING_MAP: BuildingMap = airportBuildingMapData as BuildingMap;
+
+export const INITIAL_FLEETS: FleetState[] = airportFleetsData as FleetState[];
+
+export const LEGACY_BUILDING_MAP: BuildingMap = {
   name: 'VNTT_HighTech_Campus',
   lifts: [
     {
@@ -159,7 +165,7 @@ export const INITIAL_BUILDING_MAP: BuildingMap = {
   ],
 };
 
-export const INITIAL_FLEETS: FleetState[] = [
+export const LEGACY_FLEETS: FleetState[] = [
   {
     name: 'TinyRobotFleet',
     robots: [
@@ -479,62 +485,96 @@ export const INITIAL_TASKS: TaskState[] = [
 ];
 
 export const INITIAL_DOOR_STATES: Record<string, DoorState> = {
-  AirLock_Main: {
-    door_name: 'AirLock_Main',
-    current_mode: { value: 2 }, // open
-    mode_string: 'open',
-    door_time: Date.now(),
-  },
-  Door_Warehouse_East: {
-    door_name: 'Door_Warehouse_East',
-    current_mode: { value: 0 }, // closed
-    mode_string: 'closed',
-    door_time: Date.now(),
-  },
-  Door_Cleanroom_North: {
-    door_name: 'Door_Cleanroom_North',
-    current_mode: { value: 0 }, // closed
-    mode_string: 'closed',
-    door_time: Date.now(),
-  },
-  Door_Assembly_AirLock: {
-    door_name: 'Door_Assembly_AirLock',
+  n01_door: {
+    door_name: 'n01_door',
     current_mode: { value: 0 },
     mode_string: 'closed',
     door_time: Date.now(),
   },
-};
-
-export const INITIAL_LIFT_STATES: Record<string, LiftState> = {
-  Lift_Central: {
-    lift_name: 'Lift_Central',
-    current_floor: 'L1',
-    destination_floor: 'L1',
-    door_state: 'closed',
-    motion_state: 'stopped',
-    available_floors: ['L1', 'L2'],
-    current_mode: 0,
+  n02_door: {
+    door_name: 'n02_door',
+    current_mode: { value: 0 },
+    mode_string: 'closed',
+    door_time: Date.now(),
+  },
+  s04_door: {
+    door_name: 's04_door',
+    current_mode: { value: 0 },
+    mode_string: 'closed',
+    door_time: Date.now(),
+  },
+  s08_door: {
+    door_name: 's08_door',
+    current_mode: { value: 0 },
+    mode_string: 'closed',
+    door_time: Date.now(),
+  },
+  zone_4_door: {
+    door_name: 'zone_4_door',
+    current_mode: { value: 2 },
+    mode_string: 'open',
+    door_time: Date.now(),
   },
 };
+
+export const INITIAL_LIFT_STATES: Record<string, LiftState> = {};
 
 export const INITIAL_WORKCELLS: WorkcellItem[] = [
   {
-    guid: 'Dispenser_IC_01',
+    guid: 'coke_dispenser',
     category: 'dispenser',
     state: 'idle',
     location_level: 'L1',
-    x: 180,
-    y: 240,
-    payload_capacity: 10,
-    current_payload: 'IC_Tray_Batch_A',
+    x: 94.2,
+    y: -44.3,
+    payload_capacity: 20,
+    current_payload: 'Beverage_Batch_Airport',
   },
   {
-    guid: 'Ingestor_Assembly_B',
+    guid: 'coke_dispenser_2',
+    category: 'dispenser',
+    state: 'idle',
+    location_level: 'L1',
+    x: 122.9,
+    y: -50.8,
+    payload_capacity: 20,
+    current_payload: 'Beverage_Batch_Zone4',
+  },
+  {
+    guid: 'mopcart_dispenser',
+    category: 'dispenser',
+    state: 'idle',
+    location_level: 'L1',
+    x: 159.7,
+    y: -55.6,
+    payload_capacity: 5,
+    current_payload: 'Sanitization_Cart_E',
+  },
+  {
+    guid: 'coke_ingestor',
     category: 'ingestor',
     state: 'idle',
     location_level: 'L1',
-    x: 740,
-    y: 150,
+    x: 14.8,
+    y: -9.3,
+    payload_capacity: 20,
+  },
+  {
+    guid: 'coke_ingestor_2',
+    category: 'ingestor',
+    state: 'idle',
+    location_level: 'L1',
+    x: 152.3,
+    y: -44.3,
+    payload_capacity: 20,
+  },
+  {
+    guid: 'mopcart_collector',
+    category: 'ingestor',
+    state: 'idle',
+    location_level: 'L1',
+    x: 163.4,
+    y: -55.6,
     payload_capacity: 5,
   },
 ];

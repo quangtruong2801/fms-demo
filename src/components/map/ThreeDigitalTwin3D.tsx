@@ -18,6 +18,7 @@ import {
 import { useFms } from '../../context/FmsContext';
 import { RobotState } from '../../types/rmf';
 import officeModelsData from '../../data/officeModels.json';
+import airportModelsData from '../../data/airportModels.json';
 
 interface ThreeDigitalTwin3DProps {
   onSelectRobot?: (robot: RobotState | null) => void;
@@ -76,15 +77,25 @@ export const ThreeDigitalTwin3D: React.FC<ThreeDigitalTwin3DProps> = ({ onSelect
   // Determine if map coordinates are metric or pixel-based
   const isMetric = useMemo(() => {
     if (!currentLevel) return false;
+    if (buildingMap.name === 'VNTT_HighTech_Campus') return false;
+    const hasFloatOrNeg = (n?: number) => n !== undefined && (n < 0 || Math.floor(n) !== n);
     const firstVert = currentLevel.nav_graphs?.[0]?.vertices?.[0];
     const firstWall = currentLevel.wall_segments?.[0];
-    const testX = Math.abs(firstVert?.x ?? firstWall?.x1 ?? 500);
-    return testX < 100;
-  }, [currentLevel]);
+    if (
+      hasFloatOrNeg(firstVert?.y) ||
+      hasFloatOrNeg(firstVert?.x) ||
+      hasFloatOrNeg(firstWall?.y1) ||
+      hasFloatOrNeg(firstWall?.x1)
+    ) {
+      return true;
+    }
+    const nameLower = (buildingMap.name || '').toLowerCase();
+    return nameLower.includes('airport') || nameLower.includes('terminal') || nameLower.includes('office');
+  }, [buildingMap.name, currentLevel]);
 
-  // Metric centering offset
+  // Metric centering offset & dimensions
   const originOffset = useMemo(() => {
-    if (!currentLevel) return { cx: 0, cz: 0, minX: 0, maxX: 0, minY: 0, maxY: 0 };
+    if (!currentLevel) return { cx: 0, cz: 0, minX: 0, maxX: 0, minY: 0, maxY: 0, width: 0, height: 0 };
     let minX = 99999, maxX = -99999, minY = 99999, maxY = -99999;
     currentLevel.wall_segments?.forEach((w) => {
       minX = Math.min(minX, w.x1, w.x2);
@@ -100,11 +111,13 @@ export const ThreeDigitalTwin3D: React.FC<ThreeDigitalTwin3DProps> = ({ onSelect
         maxY = Math.max(maxY, v.y);
       });
     });
-    if (minX === 99999) { minX = -20; maxX = 20; minY = -20; maxY = 20; }
+    if (minX === 99999) { minX = 0; maxX = 280; minY = -65; maxY = 0; }
     return {
       cx: (minX + maxX) / 2,
       cz: -(minY + maxY) / 2,
       minX, maxX, minY, maxY,
+      width: Math.max(1, maxX - minX),
+      height: Math.max(1, maxY - minY),
     };
   }, [currentLevel]);
 
@@ -152,8 +165,17 @@ export const ThreeDigitalTwin3D: React.FC<ThreeDigitalTwin3DProps> = ({ onSelect
   const createProceduralRobot = (robotName: string, fleetName: string): THREE.Group => {
     const robotGroup = new THREE.Group();
 
+    const nameLower = (robotName + ' ' + fleetName).toLowerCase();
+    const isCleaner = nameLower.includes('cleaner');
+    const isDelivery = nameLower.includes('delivery');
+
+    const accentColorHex = isCleaner ? 0x10B981 : isDelivery ? 0xF59E0B : 0x00F0FF;
+    const accentColorStr = isCleaner ? '#10B981' : isDelivery ? '#F59E0B' : '#00F0FF';
+
     // 1. Main Chassis (Matte Carbon / Dark Metal)
-    const chassisGeo = new THREE.BoxGeometry(0.7, 0.22, 0.55);
+    const chassisWidth = isDelivery ? 0.85 : isCleaner ? 0.78 : 0.7;
+    const chassisDepth = isDelivery ? 0.65 : isCleaner ? 0.62 : 0.55;
+    const chassisGeo = new THREE.BoxGeometry(chassisWidth, 0.22, chassisDepth);
     const chassisMat = new THREE.MeshStandardMaterial({
       color: 0x1E293B,
       metalness: 0.8,
@@ -166,7 +188,7 @@ export const ThreeDigitalTwin3D: React.FC<ThreeDigitalTwin3DProps> = ({ onSelect
     robotGroup.add(chassis);
 
     // 2. Beveled Top Shell with Accent Trim
-    const topShellGeo = new THREE.BoxGeometry(0.58, 0.08, 0.46);
+    const topShellGeo = new THREE.BoxGeometry(chassisWidth - 0.12, 0.08, chassisDepth - 0.09);
     const topShellMat = new THREE.MeshStandardMaterial({
       color: 0x0F172A,
       metalness: 0.6,
@@ -177,31 +199,60 @@ export const ThreeDigitalTwin3D: React.FC<ThreeDigitalTwin3DProps> = ({ onSelect
     robotGroup.add(topShell);
 
     // 3. Status LED Halo / Glow Band
-    const ledBandGeo = new THREE.BoxGeometry(0.72, 0.03, 0.57);
+    const ledBandGeo = new THREE.BoxGeometry(chassisWidth + 0.02, 0.03, chassisDepth + 0.02);
     const ledBandMat = new THREE.MeshStandardMaterial({
-      color: 0x00F0FF,
-      emissive: 0x00F0FF,
-      emissiveIntensity: 0.8,
+      color: accentColorHex,
+      emissive: accentColorHex,
+      emissiveIntensity: 0.85,
     });
     const ledBand = new THREE.Mesh(ledBandGeo, ledBandMat);
     ledBand.position.y = 0.23;
     robotGroup.add(ledBand);
 
+    // Specific superstructure per fleet type:
+    if (isCleaner) {
+      // Cleaner AMR: Circular Scrubbing Head & Solution Reservoir
+      const scrubberGeo = new THREE.CylinderGeometry(0.28, 0.28, 0.08, 16);
+      const scrubberMat = new THREE.MeshStandardMaterial({ color: 0x0F172A, metalness: 0.5, roughness: 0.4 });
+      const scrubber = new THREE.Mesh(scrubberGeo, scrubberMat);
+      scrubber.position.set(-0.25, 0.06, 0);
+      robotGroup.add(scrubber);
+
+      const tankGeo = new THREE.CylinderGeometry(0.16, 0.16, 0.22, 16);
+      const tankMat = new THREE.MeshStandardMaterial({ color: 0x10B981, transparent: true, opacity: 0.7, metalness: 0.2, roughness: 0.2 });
+      const tank = new THREE.Mesh(tankGeo, tankMat);
+      tank.position.set(-0.1, 0.42, 0);
+      robotGroup.add(tank);
+    } else if (isDelivery) {
+      // Delivery AMR: Dual-shelf Cargo Transporter
+      const rackMat = new THREE.MeshStandardMaterial({ color: 0x475569, metalness: 0.8, roughness: 0.3 });
+      const rackGeo = new THREE.BoxGeometry(0.65, 0.32, 0.48);
+      const rack = new THREE.Mesh(rackGeo, rackMat);
+      rack.position.set(0, 0.48, 0);
+      robotGroup.add(rack);
+
+      const cargoMat = new THREE.MeshStandardMaterial({ color: 0xF59E0B, metalness: 0.3, roughness: 0.6 });
+      const cargoGeo = new THREE.BoxGeometry(0.5, 0.2, 0.38);
+      const cargo = new THREE.Mesh(cargoGeo, cargoMat);
+      cargo.position.set(0, 0.5, 0);
+      robotGroup.add(cargo);
+    }
+
     // 4. LiDAR Sensor Dome on top
     const lidarPillarGeo = new THREE.CylinderGeometry(0.04, 0.04, 0.08, 16);
     const lidarPillarMat = new THREE.MeshStandardMaterial({ color: 0x334155, metalness: 0.9 });
     const pillar = new THREE.Mesh(lidarPillarGeo, lidarPillarMat);
-    pillar.position.y = 0.36;
+    pillar.position.y = isDelivery ? 0.68 : isCleaner ? 0.56 : 0.36;
     robotGroup.add(pillar);
 
     const lidarHeadGeo = new THREE.CylinderGeometry(0.07, 0.07, 0.06, 16);
     const lidarHeadMat = new THREE.MeshStandardMaterial({
-      color: 0x0284C7,
-      emissive: 0x00F0FF,
+      color: accentColorHex,
+      emissive: accentColorHex,
       emissiveIntensity: 0.6,
     });
     const lidarHead = new THREE.Mesh(lidarHeadGeo, lidarHeadMat);
-    lidarHead.position.y = 0.41;
+    lidarHead.position.y = isDelivery ? 0.73 : isCleaner ? 0.61 : 0.41;
     robotGroup.add(lidarHead);
 
     // 5. Headlights
@@ -209,22 +260,22 @@ export const ThreeDigitalTwin3D: React.FC<ThreeDigitalTwin3DProps> = ({ onSelect
     const lightMat = new THREE.MeshBasicMaterial({ color: 0xE0F2FE });
     const leftLight = new THREE.Mesh(lightGeo, lightMat);
     leftLight.rotation.z = Math.PI / 2;
-    leftLight.position.set(0.355, 0.16, 0.16);
+    leftLight.position.set(chassisWidth / 2 + 0.005, 0.16, 0.16);
     robotGroup.add(leftLight);
 
     const rightLight = new THREE.Mesh(lightGeo, lightMat);
     rightLight.rotation.z = Math.PI / 2;
-    rightLight.position.set(0.355, 0.16, -0.16);
+    rightLight.position.set(chassisWidth / 2 + 0.005, 0.16, -0.16);
     robotGroup.add(rightLight);
 
     // 6. Wheels (4 Omni/Drive Wheels)
     const wheelGeo = new THREE.CylinderGeometry(0.09, 0.09, 0.06, 16);
     const wheelMat = new THREE.MeshStandardMaterial({ color: 0x0A0E17, roughness: 0.9 });
     const wheelPositions = [
-      [0.2, 0.09, 0.28],
-      [-0.2, 0.09, 0.28],
-      [0.2, 0.09, -0.28],
-      [-0.2, 0.09, -0.28],
+      [0.2, 0.09, chassisDepth / 2],
+      [-0.2, 0.09, chassisDepth / 2],
+      [0.2, 0.09, -chassisDepth / 2],
+      [-0.2, 0.09, -chassisDepth / 2],
     ];
     wheelPositions.forEach(([wx, wy, wz]) => {
       const wheel = new THREE.Mesh(wheelGeo, wheelMat);
@@ -234,8 +285,8 @@ export const ThreeDigitalTwin3D: React.FC<ThreeDigitalTwin3DProps> = ({ onSelect
     });
 
     // 7. Holographic Name & Telemetry Billboard
-    const nameSprite = createTextSprite(robotName, '#00F0FF');
-    nameSprite.position.set(0, 0.8, 0);
+    const nameSprite = createTextSprite(robotName, accentColorStr);
+    nameSprite.position.set(0, isDelivery ? 1.05 : isCleaner ? 0.95 : 0.8, 0);
     robotGroup.add(nameSprite);
 
     // Tag data for animation & interaction
@@ -264,7 +315,11 @@ export const ThreeDigitalTwin3D: React.FC<ThreeDigitalTwin3DProps> = ({ onSelect
     if (!currentLevel) return;
 
     // --- 1. Floor Ground Plane with High-Tech Grid ---
-    const floorGeo = new THREE.PlaneGeometry(120, 120);
+    const mapW = originOffset.maxX - originOffset.minX;
+    const mapH = originOffset.maxY - originOffset.minY;
+    const groundSize = Math.max(120, Math.ceil(Math.max(mapW, mapH) * 1.35 / 20) * 20);
+
+    const floorGeo = new THREE.PlaneGeometry(groundSize, groundSize);
     const floorMat = new THREE.MeshStandardMaterial({
       color: 0x080B12,
       roughness: 0.8,
@@ -277,10 +332,10 @@ export const ThreeDigitalTwin3D: React.FC<ThreeDigitalTwin3DProps> = ({ onSelect
     group.add(floor);
 
     // Neon Cyber Grid
-    const grid = new THREE.GridHelper(120, 120, 0x00F0FF, 0x1E293B);
+    const grid = new THREE.GridHelper(groundSize, Math.round(groundSize / 2), 0x00F0FF, 0x1E293B);
     grid.position.y = 0;
     const gridMat = grid.material as THREE.LineBasicMaterial;
-    gridMat.opacity = 0.25;
+    gridMat.opacity = 0.22;
     gridMat.transparent = true;
     group.add(grid);
 
@@ -327,67 +382,74 @@ export const ThreeDigitalTwin3D: React.FC<ThreeDigitalTwin3DProps> = ({ onSelect
       });
     }
 
-    // --- 3. Navigation Graph: Lanes & Waypoints ---
+    // --- 3. Navigation Graph: Lanes & Waypoints (All Fleets) ---
     if (currentLevel.nav_graphs && currentLevel.nav_graphs.length > 0) {
-      const graph = currentLevel.nav_graphs[0];
+      const graphColors = [0x00F0FF, 0x10B981, 0xF59E0B, 0xA855F7, 0x38BDF8];
 
-      // Waypoints
-      if (showWaypoints) {
-        const wpGeo = new THREE.CylinderGeometry(0.24, 0.24, 0.02, 16);
-        const wpMat = new THREE.MeshBasicMaterial({ color: 0x00F0FF, transparent: true, opacity: 0.75 });
-        const ringGeo = new THREE.RingGeometry(0.3, 0.36, 16);
-        const ringMat = new THREE.MeshBasicMaterial({ color: 0x38BDF8, side: THREE.DoubleSide });
+      currentLevel.nav_graphs.forEach((graph, gIdx) => {
+        const themeColor = graphColors[gIdx % graphColors.length];
 
-        graph.vertices.forEach((v) => {
-          const p = mapToThreePos(v.x, v.y);
-          const wpMesh = new THREE.Mesh(wpGeo, wpMat);
-          wpMesh.position.set(p.x, 0.015, p.z);
-          group.add(wpMesh);
+        // Waypoints
+        if (showWaypoints) {
+          const wpGeo = new THREE.CylinderGeometry(0.24, 0.24, 0.02, 16);
+          const wpMat = new THREE.MeshBasicMaterial({ color: themeColor, transparent: true, opacity: 0.75 });
+          const ringGeo = new THREE.RingGeometry(0.3, 0.36, 16);
+          const ringMat = new THREE.MeshBasicMaterial({ color: themeColor, side: THREE.DoubleSide });
 
-          const ringMesh = new THREE.Mesh(ringGeo, ringMat);
-          ringMesh.rotation.x = -Math.PI / 2;
-          ringMesh.position.set(p.x, 0.018, p.z);
-          group.add(ringMesh);
+          graph.vertices.forEach((v) => {
+            const p = mapToThreePos(v.x, v.y);
+            const wpMesh = new THREE.Mesh(wpGeo, wpMat);
+            wpMesh.position.set(p.x, 0.015, p.z);
+            group.add(wpMesh);
 
-          if (showLabels && v.name) {
-            const label = createTextSprite(v.name, '#38BDF8', 'rgba(15, 23, 42, 0.75)');
-            label.scale.set(1.2, 0.3, 1);
-            label.position.set(p.x, 0.35, p.z);
-            group.add(label);
-          }
-        });
-      }
+            const ringMesh = new THREE.Mesh(ringGeo, ringMat);
+            ringMesh.rotation.x = -Math.PI / 2;
+            ringMesh.position.set(p.x, 0.018, p.z);
+            group.add(ringMesh);
 
-      // Lanes (Traffic Paths)
-      if (showLanes && graph.lanes) {
-        const lanePoints: THREE.Vector3[] = [];
-        graph.lanes.forEach((lane) => {
-          const v1 = graph.vertices[lane.entry];
-          const v2 = graph.vertices[lane.exit];
-          if (v1 && v2) {
-            const p1 = mapToThreePos(v1.x, v1.y);
-            const p2 = mapToThreePos(v2.x, v2.y);
-            lanePoints.push(new THREE.Vector3(p1.x, 0.02, p1.z));
-            lanePoints.push(new THREE.Vector3(p2.x, 0.02, p2.z));
-          }
-        });
-
-        if (lanePoints.length > 0) {
-          const laneGeo = new THREE.BufferGeometry().setFromPoints(lanePoints);
-          const laneMat = new THREE.LineBasicMaterial({
-            color: 0x00F0FF,
-            transparent: true,
-            opacity: 0.45,
-            linewidth: 2,
+            if (showLabels && v.name) {
+              const label = createTextSprite(v.name, '#38BDF8', 'rgba(15, 23, 42, 0.75)');
+              label.scale.set(1.2, 0.3, 1);
+              label.position.set(p.x, 0.35, p.z);
+              group.add(label);
+            }
           });
-          const laneLines = new THREE.LineSegments(laneGeo, laneMat);
-          group.add(laneLines);
         }
-      }
+
+        // Lanes (Traffic Paths)
+        if (showLanes && graph.lanes) {
+          const lanePoints: THREE.Vector3[] = [];
+          graph.lanes.forEach((lane) => {
+            const v1 = graph.vertices[lane.entry];
+            const v2 = graph.vertices[lane.exit];
+            if (v1 && v2) {
+              const p1 = mapToThreePos(v1.x, v1.y);
+              const p2 = mapToThreePos(v2.x, v2.y);
+              lanePoints.push(new THREE.Vector3(p1.x, 0.02, p1.z));
+              lanePoints.push(new THREE.Vector3(p2.x, 0.02, p2.z));
+            }
+          });
+
+          if (lanePoints.length > 0) {
+            const laneGeo = new THREE.BufferGeometry().setFromPoints(lanePoints);
+            const laneMat = new THREE.LineBasicMaterial({
+              color: themeColor,
+              transparent: true,
+              opacity: 0.45,
+              linewidth: 2,
+            });
+            const laneLines = new THREE.LineSegments(laneGeo, laneMat);
+            group.add(laneLines);
+          }
+        }
+      });
     }
 
-    // --- 4. Gazebo Office Environment (Exact 79 Models from office.building.yaml) ---
-    if (showDemoProps && Array.isArray(officeModelsData)) {
+    // --- 4. Environment Props (Office & Airport Terminal) ---
+    const isAirport = (buildingMap.name || '').toLowerCase().includes('airport') || (buildingMap.name || '').toLowerCase().includes('terminal');
+    const isOffice = (buildingMap.name || '').toLowerCase().includes('office');
+
+    if (showDemoProps) {
       // Materials
       const deskTopMat = new THREE.MeshStandardMaterial({ color: 0xF8FAFC, roughness: 0.25, metalness: 0.1 });
       const deskLegMat = new THREE.MeshStandardMaterial({ color: 0x64748B, metalness: 0.8, roughness: 0.3 });
@@ -402,6 +464,8 @@ export const ThreeDigitalTwin3D: React.FC<ThreeDigitalTwin3DProps> = ({ onSelect
       const woodMat = new THREE.MeshStandardMaterial({ color: 0x785338, roughness: 0.6 });
       const screenMat = new THREE.MeshStandardMaterial({ color: 0x0F172A, metalness: 0.5 });
       const dispenserMat = new THREE.MeshStandardMaterial({ color: 0x0284C7, emissive: 0x00F0FF, emissiveIntensity: 0.4 });
+      const pineMat = new THREE.MeshStandardMaterial({ color: 0x15803D, roughness: 0.8 });
+      const personSkinMat = new THREE.MeshStandardMaterial({ color: 0x38BDF8, roughness: 0.4 });
 
       // Chair builder helper
       const buildChair = (mat: THREE.Material) => {
@@ -439,12 +503,10 @@ export const ThreeDigitalTwin3D: React.FC<ThreeDigitalTwin3DProps> = ({ onSelect
           table.add(leg);
         });
 
-        // Blue privacy divider on rear
         const divider = new THREE.Mesh(new THREE.BoxGeometry(1.5, 0.45, 0.04), blueDividerMat);
         divider.position.set(0, 0.95, -0.38);
         table.add(divider);
 
-        // Screen
         const screen = new THREE.Mesh(new THREE.BoxGeometry(0.48, 0.28, 0.02), screenMat);
         screen.position.set(0, 0.92, -0.2);
         table.add(screen);
@@ -458,12 +520,10 @@ export const ThreeDigitalTwin3D: React.FC<ThreeDigitalTwin3DProps> = ({ onSelect
         const d = isBig ? 1.4 : 1.1;
         const h = isBig ? 1.4 : 1.2;
 
-        // Back acoustic wall
         const back = new THREE.Mesh(new THREE.BoxGeometry(w, h, 0.04), blueDividerMat);
         back.position.set(0, h / 2, -d / 2);
         cubicle.add(back);
 
-        // Side walls
         const side1 = new THREE.Mesh(new THREE.BoxGeometry(0.04, h, d), blueDividerMat);
         side1.position.set(-w / 2, h / 2, 0);
         cubicle.add(side1);
@@ -472,7 +532,6 @@ export const ThreeDigitalTwin3D: React.FC<ThreeDigitalTwin3DProps> = ({ onSelect
         side2.position.set(w / 2, h / 2, 0);
         cubicle.add(side2);
 
-        // Desk inside
         const desk = new THREE.Mesh(new THREE.BoxGeometry(w - 0.08, 0.04, d * 0.7), deskTopMat);
         desk.position.set(0, 0.74, -d * 0.15);
         cubicle.add(desk);
@@ -483,62 +542,135 @@ export const ThreeDigitalTwin3D: React.FC<ThreeDigitalTwin3DProps> = ({ onSelect
         return cubicle;
       };
 
-      // Iterate and instantiate all 79 Gazebo models with millimeter precision
-      (officeModelsData as any[]).forEach((m) => {
-        const p = mapToThreePos(m.mx, m.my);
-        const modelName = m.model_name || '';
-        let meshObj: THREE.Group | THREE.Mesh | null = null;
+      // Airport Fountain
+      const buildFountain = () => {
+        const f = new THREE.Group();
+        const basin = new THREE.Mesh(new THREE.CylinderGeometry(2.2, 2.4, 0.45, 20), cabinetMat);
+        basin.position.y = 0.225;
+        const water = new THREE.Mesh(new THREE.CylinderGeometry(2.05, 2.05, 0.05, 20), dispenserMat);
+        water.position.y = 0.42;
+        const pillar = new THREE.Mesh(new THREE.CylinderGeometry(0.5, 0.65, 1.2, 16), metalCabinetMat);
+        pillar.position.y = 0.8;
+        f.add(basin, water, pillar);
+        return f;
+      };
 
-        if (modelName.includes('AdjTable')) {
-          meshObj = buildAdjTable();
-        } else if (modelName.includes('SmallCubicle')) {
-          meshObj = buildCubicle(false);
-        } else if (modelName.includes('BigCubicle')) {
-          meshObj = buildCubicle(true);
-        } else if (modelName.includes('OfficeChairBlack')) {
-          meshObj = buildChair(chairBlackMat);
-        } else if (modelName.includes('OfficeChairBlue')) {
-          meshObj = buildChair(chairBlueMat);
-        } else if (modelName.includes('OfficeChairGrey')) {
-          meshObj = buildChair(chairGreyMat);
-        } else if (modelName.includes('ConfTable')) {
-          meshObj = new THREE.Mesh(new THREE.BoxGeometry(2.8, 0.06, 1.2), deskTopMat);
-          meshObj.position.y = 0.74;
-        } else if (modelName.includes('Fridge')) {
-          meshObj = new THREE.Mesh(new THREE.BoxGeometry(0.85, 1.8, 0.7), fridgeMat);
-          meshObj.position.y = 0.9;
-        } else if (modelName.includes('MetalCabinetYellow')) {
-          meshObj = new THREE.Mesh(new THREE.BoxGeometry(0.9, 1.4, 0.45), yellowCabinetMat);
-          meshObj.position.y = 0.7;
-        } else if (modelName.includes('MetalCabinet')) {
-          meshObj = new THREE.Mesh(new THREE.BoxGeometry(0.9, 1.4, 0.45), metalCabinetMat);
-          meshObj.position.y = 0.7;
-        } else if (modelName.includes('WhiteCabinet')) {
-          meshObj = new THREE.Mesh(new THREE.BoxGeometry(0.9, 1.4, 0.45), cabinetMat);
-          meshObj.position.y = 0.7;
-        } else if (modelName.includes('Drawer')) {
-          meshObj = new THREE.Mesh(new THREE.BoxGeometry(0.45, 0.55, 0.5), cabinetMat);
-          meshObj.position.y = 0.28;
-        } else if (modelName.includes('CoffeeTable')) {
-          meshObj = new THREE.Mesh(new THREE.BoxGeometry(1.1, 0.38, 0.6), woodMat);
-          meshObj.position.y = 0.19;
-        } else if (modelName.includes('SquareShelf')) {
-          meshObj = new THREE.Mesh(new THREE.BoxGeometry(0.8, 1.5, 0.4), woodMat);
-          meshObj.position.y = 0.75;
-        } else if (modelName.includes('TrashBin')) {
-          meshObj = new THREE.Mesh(new THREE.CylinderGeometry(0.14, 0.12, 0.38, 12), chairBlackMat);
-          meshObj.position.y = 0.19;
-        } else if (modelName.includes('TeleportDispenser') || modelName.includes('TeleportIngestor')) {
-          meshObj = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.7, 0.4), dispenserMat);
-          meshObj.position.y = 0.35;
-        }
+      // Airport Pine/Indoor Tree
+      const buildTree = () => {
+        const tree = new THREE.Group();
+        const trunk = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.24, 1.6, 8), woodMat);
+        trunk.position.y = 0.8;
+        const foliage = new THREE.Mesh(new THREE.ConeGeometry(1.2, 3.0, 8), pineMat);
+        foliage.position.y = 2.8;
+        tree.add(trunk, foliage);
+        return tree;
+      };
 
-        if (meshObj) {
-          meshObj.position.set(p.x, meshObj.position.y || 0, p.z);
-          meshObj.rotation.y = m.yaw || 0;
-          group.add(meshObj);
-        }
-      });
+      // Stylized Terminal Passenger
+      const buildPerson = () => {
+        const p = new THREE.Group();
+        const body = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.22, 1.1, 8), personSkinMat);
+        body.position.y = 0.85;
+        const head = new THREE.Mesh(new THREE.SphereGeometry(0.14, 12, 12), personSkinMat);
+        head.position.y = 1.55;
+        p.add(body, head);
+        return p;
+      };
+
+      // 4A. If Office map: render office models
+      if (isOffice && Array.isArray(officeModelsData)) {
+        (officeModelsData as any[]).forEach((m) => {
+          const p = mapToThreePos(m.mx, m.my);
+          const modelName = m.model_name || '';
+          let meshObj: THREE.Group | THREE.Mesh | null = null;
+
+          if (modelName.includes('AdjTable')) {
+            meshObj = buildAdjTable();
+          } else if (modelName.includes('SmallCubicle')) {
+            meshObj = buildCubicle(false);
+          } else if (modelName.includes('BigCubicle')) {
+            meshObj = buildCubicle(true);
+          } else if (modelName.includes('OfficeChairBlack')) {
+            meshObj = buildChair(chairBlackMat);
+          } else if (modelName.includes('OfficeChairBlue')) {
+            meshObj = buildChair(chairBlueMat);
+          } else if (modelName.includes('OfficeChairGrey')) {
+            meshObj = buildChair(chairGreyMat);
+          } else if (modelName.includes('ConfTable')) {
+            meshObj = new THREE.Mesh(new THREE.BoxGeometry(2.8, 0.06, 1.2), deskTopMat);
+            meshObj.position.y = 0.74;
+          } else if (modelName.includes('Fridge')) {
+            meshObj = new THREE.Mesh(new THREE.BoxGeometry(0.85, 1.8, 0.7), fridgeMat);
+            meshObj.position.y = 0.9;
+          } else if (modelName.includes('MetalCabinetYellow')) {
+            meshObj = new THREE.Mesh(new THREE.BoxGeometry(0.9, 1.4, 0.45), yellowCabinetMat);
+            meshObj.position.y = 0.7;
+          } else if (modelName.includes('MetalCabinet')) {
+            meshObj = new THREE.Mesh(new THREE.BoxGeometry(0.9, 1.4, 0.45), metalCabinetMat);
+            meshObj.position.y = 0.7;
+          } else if (modelName.includes('WhiteCabinet')) {
+            meshObj = new THREE.Mesh(new THREE.BoxGeometry(0.9, 1.4, 0.45), cabinetMat);
+            meshObj.position.y = 0.7;
+          } else if (modelName.includes('Drawer')) {
+            meshObj = new THREE.Mesh(new THREE.BoxGeometry(0.45, 0.55, 0.5), cabinetMat);
+            meshObj.position.y = 0.28;
+          } else if (modelName.includes('CoffeeTable')) {
+            meshObj = new THREE.Mesh(new THREE.BoxGeometry(1.1, 0.38, 0.6), woodMat);
+            meshObj.position.y = 0.19;
+          } else if (modelName.includes('SquareShelf')) {
+            meshObj = new THREE.Mesh(new THREE.BoxGeometry(0.8, 1.5, 0.4), woodMat);
+            meshObj.position.y = 0.75;
+          } else if (modelName.includes('TrashBin')) {
+            meshObj = new THREE.Mesh(new THREE.CylinderGeometry(0.14, 0.12, 0.38, 12), chairBlackMat);
+            meshObj.position.y = 0.19;
+          } else if (modelName.includes('TeleportDispenser') || modelName.includes('TeleportIngestor')) {
+            meshObj = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.7, 0.4), dispenserMat);
+            meshObj.position.y = 0.35;
+          }
+
+          if (meshObj) {
+            meshObj.position.set(p.x, meshObj.position.y || 0, p.z);
+            meshObj.rotation.y = m.yaw || 0;
+            group.add(meshObj);
+          }
+        });
+      }
+
+      // 4B. If Airport Terminal map: render airport models
+      if (isAirport && Array.isArray(airportModelsData)) {
+        (airportModelsData as any[]).forEach((m) => {
+          const p = mapToThreePos(m.x, m.y);
+          const modelName = m.model_name || '';
+          let meshObj: THREE.Group | THREE.Mesh | null = null;
+
+          if (modelName.includes('Fountain')) {
+            meshObj = buildFountain();
+          } else if (modelName.includes('Pine Tree') || modelName.includes('Oak tree')) {
+            meshObj = buildTree();
+          } else if (modelName.includes('Standing person') || modelName.includes('Visitor')) {
+            meshObj = buildPerson();
+          } else if (modelName.includes('Cafe table') || modelName.includes('Table')) {
+            meshObj = new THREE.Mesh(new THREE.CylinderGeometry(0.55, 0.55, 0.04, 16), deskTopMat);
+            meshObj.position.y = 0.74;
+            const leg = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.04, 0.74, 8), deskLegMat);
+            leg.position.y = 0.37;
+            const tableGrp = new THREE.Group();
+            tableGrp.add(meshObj, leg);
+            meshObj = tableGrp;
+          } else if (modelName.includes('Chair') || modelName.includes('MiniSofa')) {
+            meshObj = buildChair(chairBlueMat);
+          } else if (modelName.includes('ElectronicsRecycling') || modelName.includes('Teleport')) {
+            meshObj = new THREE.Mesh(new THREE.BoxGeometry(0.65, 1.4, 0.65), metalCabinetMat);
+            meshObj.position.y = 0.7;
+          }
+
+          if (meshObj) {
+            meshObj.position.set(p.x, meshObj.position.y || 0, p.z);
+            meshObj.rotation.y = m.yaw || 0;
+            group.add(meshObj);
+          }
+        });
+      }
     }
 
     // --- 5. Interactive 3D Doors ---
@@ -568,7 +700,7 @@ export const ThreeDigitalTwin3D: React.FC<ThreeDigitalTwin3DProps> = ({ onSelect
         group.add(doorMesh);
       });
     }
-  }, [currentLevel, mapToThreePos, showWalls, showWaypoints, showLanes, showLabels, showDemoProps, doorStates]);
+  }, [currentLevel, mapToThreePos, showWalls, showWaypoints, showLanes, showLabels, showDemoProps, doorStates, buildingMap.name]);
 
   // Main Three.js Scene Initialization
   useEffect(() => {
@@ -578,7 +710,8 @@ export const ThreeDigitalTwin3D: React.FC<ThreeDigitalTwin3DProps> = ({ onSelect
     // Scene
     const scene = new THREE.Scene();
     scene.background = new THREE.Color(0x07090E);
-    scene.fog = new THREE.FogExp2(0x07090E, 0.015);
+    const isLarge = (originOffset.width || 0) > 120;
+    scene.fog = new THREE.FogExp2(0x07090E, isLarge ? 0.0022 : 0.015);
     sceneRef.current = scene;
 
     // Camera
@@ -586,9 +719,13 @@ export const ThreeDigitalTwin3D: React.FC<ThreeDigitalTwin3DProps> = ({ onSelect
       45,
       container.clientWidth / container.clientHeight,
       0.1,
-      500,
+      1200,
     );
-    camera.position.set(18, 22, 24);
+    if (isLarge) {
+      camera.position.set(0, 105, 125);
+    } else {
+      camera.position.set(18, 22, 24);
+    }
     cameraRef.current = camera;
 
     // Renderer
@@ -607,29 +744,29 @@ export const ThreeDigitalTwin3D: React.FC<ThreeDigitalTwin3DProps> = ({ onSelect
     controls.dampingFactor = 0.06;
     controls.maxPolarAngle = Math.PI / 2.05; // Do not go below floor
     controls.minDistance = 3;
-    controls.maxDistance = 150;
+    controls.maxDistance = 550;
     controls.target.set(0, 0, 0);
     controlsRef.current = controls;
 
     // Lights
-    const ambientLight = new THREE.AmbientLight(0xFFFFFF, 0.8);
+    const ambientLight = new THREE.AmbientLight(0xFFFFFF, 0.85);
     scene.add(ambientLight);
 
     const dirLight = new THREE.DirectionalLight(0xE0F2FE, 1.4);
-    dirLight.position.set(25, 40, 20);
+    dirLight.position.set(40, 80, 40);
     dirLight.castShadow = true;
     dirLight.shadow.mapSize.width = 2048;
     dirLight.shadow.mapSize.height = 2048;
     dirLight.shadow.camera.near = 10;
-    dirLight.shadow.camera.far = 100;
-    dirLight.shadow.camera.left = -40;
-    dirLight.shadow.camera.right = 40;
-    dirLight.shadow.camera.top = 40;
-    dirLight.shadow.camera.bottom = -40;
+    dirLight.shadow.camera.far = 400;
+    dirLight.shadow.camera.left = -180;
+    dirLight.shadow.camera.right = 180;
+    dirLight.shadow.camera.top = 180;
+    dirLight.shadow.camera.bottom = -180;
     scene.add(dirLight);
 
-    const blueRimLight = new THREE.DirectionalLight(0x00F0FF, 0.6);
-    blueRimLight.position.set(-30, 20, -30);
+    const blueRimLight = new THREE.DirectionalLight(0x00F0FF, 0.7);
+    blueRimLight.position.set(-60, 40, -60);
     scene.add(blueRimLight);
 
     // Add Groups to Scene
@@ -830,15 +967,18 @@ export const ThreeDigitalTwin3D: React.FC<ThreeDigitalTwin3DProps> = ({ onSelect
     const controls = controlsRef.current;
     if (!camera || !controls) return;
 
+    const isLarge = (originOffset.width || 0) > 120;
+    const d = isLarge ? 115 : 25;
+
     if (preset === 'top') {
-      camera.position.set(0, 36, 0.001);
+      camera.position.set(0, d * 1.35, 0.001);
       controls.target.set(0, 0, 0);
     } else if (preset === 'front') {
-      camera.position.set(0, 8, 28);
+      camera.position.set(0, d * 0.35, d * 1.1);
       controls.target.set(0, 0, 0);
     } else {
       // Isometric view
-      camera.position.set(18, 22, 24);
+      camera.position.set(0, d * 0.9, d * 1.05);
       controls.target.set(0, 0, 0);
     }
     controls.update();

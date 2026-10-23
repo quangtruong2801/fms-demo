@@ -1,0 +1,202 @@
+[
+  {
+    "name": "tinyRobot",
+    "robots": [
+      {
+        "name": "tinyRobot_0",
+        "model": "AMR-Carrier-X",
+        "battery": 1,
+        "location": {
+          "x": 28.72,
+          "y": -51.193,
+          "yaw": -1.568,
+          "level_name": "L1",
+          "speed": 0
+        },
+        "path": [],
+        "mode": "idle",
+        "task_id": null,
+        "commissioned": true,
+        "seq": 1000,
+        "last_heartbeat": 1792730695558
+      },
+      {
+        "name": "tinyRobot_1",
+        "model": "AMR-Carrier-X",
+        "battery": 1,
+        "location": {
+          "x": 67.967,
+          "y": -49.361,
+          "yaw": -1.598,
+          "level_name": "L1",
+          "speed": 0
+        },
+        "path": [],
+        "mode": "idle",
+        "task_id": null,
+        "commissioned": true,
+        "seq": 1050,
+        "last_heartbeat": 1792730695558
+      },
+      {
+        "name": "tinyRobot_2",
+        "model": "AMR-Carrier-X",
+        "battery": 1,
+        "location": {
+          "x": 86.497,
+          "y": -9.633,
+          "yaw": -0.002,
+          "level_name": "L1",
+          "speed": 0
+        },
+        "path": [],
+        "mode": "idle",
+        "task_id": null,
+        "commissioned": true,
+        "seq": 1100,
+        "last_heartbeat": 1792730695558
+      },
+      {
+        "name": "tinyRobot_3",
+        "model": "AMR-Carrier-X",
+        "battery": 1,
+        "location": {
+          "x": 21.777,
+          "y": -27.451,
+          "yaw": 1.582,
+          "level_name": "L1",
+          "speed": 0
+        },
+        "path": [],
+        "mode": "idle",
+        "task_id": null,
+        "commissioned": true,
+        "seq": 1150,
+        "last_heartbeat": 1792730695558
+      }
+    ]
+  },
+  {
+    "name": "cleanerBotA",
+    "robots": [
+      {
+        "name": "cleanerBotA_0",
+        "model": "AMR-Scrubber-X",
+        "battery": 1,
+        "location": {
+          "x": 117.413,
+          "y": -49.488,
+          "yaw": -1.573,
+          "level_name": "L1",
+          "speed": 0
+        },
+        "path": [],
+        "mode": "idle",
+        "task_id": null,
+        "commissioned": true,
+        "seq": 1000,
+        "last_heartbeat": 1792730695558
+      }
+    ]
+  },
+  {
+    "name": "deliveryRobot",
+    "robots": [
+      {
+        "name": "deliveryRobot_0",
+        "model": "AMR-Cargo-Transporter",
+        "battery": 1,
+        "location": {
+          "x": 96.595,
+          "y": -51.965,
+          "yaw": -0.016,
+          "level_name": "L1",
+          "speed": 0
+        },
+        "path": [],
+        "mode": "idle",
+        "task_id": null,
+        "commissioned": true,
+        "seq": 1000,
+        "last_heartbeat": 1792730695558
+      },
+      {
+        "name": "deliveryRobot_1",
+        "model": "AMR-Cargo-Transporter",
+        "battery": 1,
+        "location": {
+          "x": 152.348,
+          "y": -44.319,
+          "yaw": 0.031,
+          "level_name": "L1",
+          "speed": 0
+        },
+        "path": [],
+        "mode": "idle",
+        "task_id": null,
+        "commissioned": true,
+        "seq": 1050,
+        "last_heartbeat": 1792730695558
+      },
+      {
+        "name": "deliveryRobot_2",
+        "model": "AMR-Cargo-Transporter",
+        "battery": 1,
+        "location": {
+          "x": 14.777,
+          "y": -9.279,
+          "yaw": 0.005,
+          "level_name": "L1",
+          "speed": 0
+        },
+        "path": [],
+        "mode": "idle",
+        "task_id": null,
+        "commissioned": true,
+        "seq": 1100,
+        "last_heartbeat": 1792730695558
+      }
+    ]
+  },
+  {
+    "name": "cleanerBotE",
+    "robots": [
+      {
+        "name": "cleanerBotE_0",
+        "model": "AMR-Scrubber-X",
+        "battery": 1,
+        "location": {
+          "x": 159.699,
+          "y": -55.561,
+          "yaw": 1.571,
+          "level_name": "L1",
+          "speed": 0
+        },
+        "path": [],
+        "mode": "idle",
+        "task_id": null,
+        "commissioned": true,
+        "seq": 1000,
+        "last_heartbeat": 1792730695558
+      },
+      {
+        "name": "cleanerBotE_1",
+        "model": "AMR-Scrubber-X",
+        "battery": 1,
+        "location": {
+          "x": 163.423,
+          "y": -55.626,
+          "yaw": 1.563,
+          "level_name": "L1",
+          "speed": 0
+        },
+        "path": [],
+        "mode": "idle",
+        "task_id": null,
+        "commissioned": true,
+        "seq": 1050,
+        "last_heartbeat": 1792730695558
+      }
+    ]
+  }
+]

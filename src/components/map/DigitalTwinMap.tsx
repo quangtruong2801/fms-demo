@@ -57,35 +57,108 @@ export const DigitalTwinMap: React.FC = () => {
     .flatMap((f) => f.robots)
     .filter((r) => r.location.level_name === selectedFloor);
 
-  // Determine if map coordinates are in real-world meters (< 100) or pixels
+  // Floorplan image overlay
+  const [floorplanImg, setFloorplanImg] = useState<HTMLImageElement | null>(null);
+
+  // Determine if map coordinates are in real-world meters or pixels
   const isMetric = useMemo(() => {
     if (!currentLevel) return false;
+    if (buildingMap.name === 'VNTT_HighTech_Campus') return false;
+    const hasFloatOrNeg = (n?: number) => n !== undefined && (n < 0 || Math.floor(n) !== n);
     const firstVert = currentLevel.nav_graphs?.[0]?.vertices?.[0];
     const firstWall = currentLevel.wall_segments?.[0];
-    const testX = Math.abs(firstVert?.x ?? firstWall?.x1 ?? 500);
-    return testX < 100;
-  }, [currentLevel]);
+    if (
+      hasFloatOrNeg(firstVert?.y) ||
+      hasFloatOrNeg(firstVert?.x) ||
+      hasFloatOrNeg(firstWall?.y1) ||
+      hasFloatOrNeg(firstWall?.x1)
+    ) {
+      return true;
+    }
+    const nameLower = (buildingMap.name || '').toLowerCase();
+    return nameLower.includes('airport') || nameLower.includes('terminal') || nameLower.includes('office');
+  }, [buildingMap.name, currentLevel]);
 
   const originOffset = useMemo(() => {
-    if (!isMetric || !currentLevel) return { minX: 0, maxY: 0 };
+    if (!isMetric || !currentLevel) {
+      return { minX: 0, maxX: 1000, minY: 0, maxY: 600, width: 1000, height: 600 };
+    }
     let minX = 99999;
+    let maxX = -99999;
+    let minY = 99999;
     let maxY = -99999;
     currentLevel.wall_segments?.forEach((w) => {
       minX = Math.min(minX, w.x1, w.x2);
+      maxX = Math.max(maxX, w.x1, w.x2);
+      minY = Math.min(minY, w.y1, w.y2);
       maxY = Math.max(maxY, w.y1, w.y2);
     });
     currentLevel.nav_graphs?.forEach((g) => {
       g.vertices.forEach((v) => {
         minX = Math.min(minX, v.x);
+        maxX = Math.max(maxX, v.x);
+        minY = Math.min(minY, v.y);
         maxY = Math.max(maxY, v.y);
       });
     });
-    if (minX === 99999) minX = 0;
-    if (maxY === -99999) maxY = 0;
-    return { minX, maxY };
+    if (minX === 99999) {
+      minX = 0;
+      maxX = 280;
+      minY = -65;
+      maxY = 0;
+    }
+    return {
+      minX,
+      maxX,
+      minY,
+      maxY,
+      width: Math.max(1, maxX - minX),
+      height: Math.max(1, maxY - minY),
+    };
   }, [isMetric, currentLevel]);
 
-  const meterScale = 45;
+  // Adaptive meter scale: large airport terminal (~282m) uses 9.5 px/m, office (~25m) uses 45 px/m
+  const meterScale = useMemo(() => {
+    if (!isMetric) return 1;
+    if (originOffset.width > 150) return 10;
+    if (originOffset.width > 60) return 22;
+    return 45;
+  }, [isMetric, originOffset.width]);
+
+  // Auto load floorplan schematic texture
+  useEffect(() => {
+    const rawUrl = currentLevel?.images?.[0]?.data;
+    const isAirport = (buildingMap.name || '').toLowerCase().includes('airport');
+    const targetSrc = rawUrl || (isAirport ? '/maps/airport_terminal.png' : null);
+
+    if (!targetSrc) {
+      setFloorplanImg(null);
+      return;
+    }
+
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.src = targetSrc;
+    img.onload = () => setFloorplanImg(img);
+    img.onerror = () => {
+      if (isAirport && targetSrc !== '/maps/airport_terminal.png') {
+        const fallback = new Image();
+        fallback.src = '/maps/airport_terminal.png';
+        fallback.onload = () => setFloorplanImg(fallback);
+      }
+    };
+  }, [currentLevel, buildingMap.name]);
+
+  // Auto-fit initial view on floor switch or map resize
+  useEffect(() => {
+    if (originOffset.width > 150) {
+      setZoom(0.42);
+      setOffset({ x: 30, y: 130 });
+    } else {
+      setZoom(1.0);
+      setOffset({ x: 40, y: 30 });
+    }
+  }, [selectedFloor, originOffset.width]);
 
   const toCanvasPos = useCallback(
     (x: number, y: number) => {
@@ -95,7 +168,7 @@ export const DigitalTwinMap: React.FC = () => {
         y: (-y + originOffset.maxY) * meterScale + 80,
       };
     },
-    [isMetric, originOffset],
+    [isMetric, originOffset, meterScale],
   );
 
   // Auto follow robot if enabled
@@ -165,9 +238,31 @@ export const DigitalTwinMap: React.FC = () => {
     ctx.scale(zoom, zoom);
 
     if (currentLevel) {
-      // 1. Draw Lanes (Nav Graph)
+      // 0. Draw Floorplan Blueprint Image (Underlay)
+      if (floorplanImg && currentLevel.images?.[0]) {
+        const meta = currentLevel.images[0];
+        const imgScale = meta.scale || 0.08212;
+        const imgW = floorplanImg.naturalWidth * imgScale * meterScale;
+        const imgH = floorplanImg.naturalHeight * imgScale * meterScale;
+        const originPos = toCanvasPos(meta.x_offset || 0, meta.y_offset || 0);
+
+        ctx.save();
+        ctx.globalAlpha = 0.28;
+        ctx.drawImage(floorplanImg, originPos.x, originPos.y, imgW, imgH);
+        ctx.restore();
+      }
+
+      // 1. Draw Lanes (Nav Graph) with fleet color coding
+      const graphColors = [
+        'rgba(0, 240, 255, 0.35)', // tinyRobot: Cyan
+        'rgba(16, 185, 129, 0.45)', // cleanerBotA: Emerald
+        'rgba(245, 158, 11, 0.45)', // deliveryRobot: Amber
+        'rgba(168, 85, 247, 0.45)', // cleanerBotE: Purple
+      ];
+
       if (layers.showLanes && currentLevel.nav_graphs) {
-        currentLevel.nav_graphs.forEach((graph) => {
+        currentLevel.nav_graphs.forEach((graph, gIdx) => {
+          const laneColor = graphColors[gIdx % graphColors.length];
           graph.lanes.forEach((lane) => {
             const rawV1 = graph.vertices[lane.entry];
             const rawV2 = graph.vertices[lane.exit];
@@ -176,7 +271,7 @@ export const DigitalTwinMap: React.FC = () => {
             const v1 = toCanvasPos(rawV1.x, rawV1.y);
             const v2 = toCanvasPos(rawV2.x, rawV2.y);
 
-            ctx.strokeStyle = 'rgba(0, 240, 255, 0.25)';
+            ctx.strokeStyle = laneColor;
             ctx.lineWidth = 3;
             ctx.setLineDash([6, 6]);
             ctx.beginPath();

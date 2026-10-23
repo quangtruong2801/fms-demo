@@ -1,0 +1,2258 @@
+[
+  {
+    "name": "Fountain",
+    "model_name": "OpenRobotics/Fountain",
+    "x": 73.847,
+    "y": -34.708,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "Pine Tree",
+    "model_name": "OpenRobotics/Pine Tree",
+    "x": 78.168,
+    "y": -35.71,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "Pine Tree",
+    "model_name": "OpenRobotics/Pine Tree",
+    "x": 74.025,
+    "y": -32.286,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "Pine Tree",
+    "model_name": "OpenRobotics/Pine Tree",
+    "x": 70.545,
+    "y": -35.848,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "MainTable",
+    "model_name": "OpenRobotics/MainTable",
+    "x": 65.531,
+    "y": -28.957,
+    "yaw": 0.1987,
+    "z": 0
+  },
+  {
+    "name": "Standing person",
+    "model_name": "OpenRobotics/Standing person",
+    "x": 65.007,
+    "y": -27.804,
+    "yaw": 0.3128,
+    "z": 0
+  },
+  {
+    "name": "Standing person",
+    "model_name": "OpenRobotics/Standing person",
+    "x": 53.665,
+    "y": -30.642,
+    "yaw": 0.5731,
+    "z": 0
+  },
+  {
+    "name": "Standing person",
+    "model_name": "OpenRobotics/Standing person",
+    "x": 54.51,
+    "y": -39.691,
+    "yaw": 2.8394,
+    "z": 0
+  },
+  {
+    "name": "Standing person",
+    "model_name": "OpenRobotics/Standing person",
+    "x": 45.656,
+    "y": -41.265,
+    "yaw": 2.8386,
+    "z": 0
+  },
+  {
+    "name": "Standing person",
+    "model_name": "OpenRobotics/Standing person",
+    "x": 45.489,
+    "y": -47.166,
+    "yaw": 3.0509,
+    "z": 0
+  },
+  {
+    "name": "Standing person",
+    "model_name": "OpenRobotics/Standing person",
+    "x": 66.22,
+    "y": -5.253,
+    "yaw": -1.2925,
+    "z": 0
+  },
+  {
+    "name": "Standing person",
+    "model_name": "OpenRobotics/Standing person",
+    "x": 55.485,
+    "y": -4.123,
+    "yaw": 2.5309,
+    "z": 0
+  },
+  {
+    "name": "Standing person",
+    "model_name": "OpenRobotics/Standing person",
+    "x": 59.483,
+    "y": -20.235,
+    "yaw": 0.8252,
+    "z": 0
+  },
+  {
+    "name": "Standing person",
+    "model_name": "OpenRobotics/Standing person",
+    "x": 50.238,
+    "y": -40.987,
+    "yaw": -0.7629,
+    "z": 0
+  },
+  {
+    "name": "Standing person",
+    "model_name": "OpenRobotics/Standing person",
+    "x": 59.271,
+    "y": -9.79,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "WhiteChipChair",
+    "model_name": "OpenRobotics/WhiteChipChair",
+    "x": 59.093,
+    "y": -39.528,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "WhiteChipChair",
+    "model_name": "OpenRobotics/WhiteChipChair",
+    "x": 60.877,
+    "y": -39.594,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "WhiteChipChair",
+    "model_name": "OpenRobotics/WhiteChipChair",
+    "x": 62.661,
+    "y": -39.682,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "WhiteChipChair",
+    "model_name": "OpenRobotics/WhiteChipChair",
+    "x": 74.747,
+    "y": -41.353,
+    "yaw": 1.5284,
+    "z": 0
+  },
+  {
+    "name": "WhiteChipChair",
+    "model_name": "OpenRobotics/WhiteChipChair",
+    "x": 76.406,
+    "y": -41.328,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "WhiteChipChair",
+    "model_name": "OpenRobotics/WhiteChipChair",
+    "x": 78.089,
+    "y": -41.254,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "Pine Tree",
+    "model_name": "OpenRobotics/Pine Tree",
+    "x": 53.146,
+    "y": -33.876,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "Cafe table",
+    "model_name": "OpenRobotics/Cafe table",
+    "x": 85.08,
+    "y": -23.965,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "Cafe table",
+    "model_name": "OpenRobotics/Cafe table",
+    "x": 83.523,
+    "y": -23.965,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "Cafe table",
+    "model_name": "OpenRobotics/Cafe table",
+    "x": 82.037,
+    "y": -23.965,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "ElectronicsRecycling",
+    "model_name": "OpenRobotics/ElectronicsRecycling",
+    "x": 80.217,
+    "y": -40.438,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "ElectronicsRecycling",
+    "model_name": "OpenRobotics/ElectronicsRecycling",
+    "x": 53.514,
+    "y": -29.872,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "ElectronicsRecycling",
+    "model_name": "OpenRobotics/ElectronicsRecycling",
+    "x": 75.883,
+    "y": -21.409,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "ElectronicsRecycling",
+    "model_name": "OpenRobotics/ElectronicsRecycling",
+    "x": 54.408,
+    "y": -26.531,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "ElectronicsRecycling",
+    "model_name": "OpenRobotics/ElectronicsRecycling",
+    "x": 51.186,
+    "y": -40.038,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "ElectronicsRecycling",
+    "model_name": "OpenRobotics/ElectronicsRecycling",
+    "x": 65.99,
+    "y": -18.808,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "Fridge",
+    "model_name": "OpenRobotics/Fridge",
+    "x": 81.892,
+    "y": -19.581,
+    "yaw": -0.0006,
+    "z": 0
+  },
+  {
+    "name": "MainTable",
+    "model_name": "OpenRobotics/MainTable",
+    "x": 86.11,
+    "y": -21.11,
+    "yaw": 4.6995,
+    "z": 0
+  },
+  {
+    "name": "Standing person",
+    "model_name": "OpenRobotics/Standing person",
+    "x": 86.858,
+    "y": -20.911,
+    "yaw": 4.6993,
+    "z": 0
+  },
+  {
+    "name": "Standing person",
+    "model_name": "OpenRobotics/Standing person",
+    "x": 85.113,
+    "y": -20.911,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "PotatoChipChair",
+    "model_name": "OpenRobotics/PotatoChipChair",
+    "x": 76.487,
+    "y": -15.925,
+    "yaw": 3.1598,
+    "z": 0
+  },
+  {
+    "name": "PotatoChipChair",
+    "model_name": "OpenRobotics/PotatoChipChair",
+    "x": 76.487,
+    "y": -19.166,
+    "yaw": 3.1694,
+    "z": 0
+  },
+  {
+    "name": "PotatoChipChair",
+    "model_name": "OpenRobotics/PotatoChipChair",
+    "x": 76.536,
+    "y": -13.781,
+    "yaw": 3.1416,
+    "z": 0
+  },
+  {
+    "name": "PotatoChipChair",
+    "model_name": "OpenRobotics/PotatoChipChair",
+    "x": 87.057,
+    "y": -35.77,
+    "yaw": 4.3602,
+    "z": 0
+  },
+  {
+    "name": "PotatoChipChair",
+    "model_name": "OpenRobotics/PotatoChipChair",
+    "x": 85.163,
+    "y": -34.723,
+    "yaw": 4.2026,
+    "z": 0
+  },
+  {
+    "name": "PotatoChipChair",
+    "model_name": "OpenRobotics/PotatoChipChair",
+    "x": 83.118,
+    "y": -33.177,
+    "yaw": 4.0445,
+    "z": 0
+  },
+  {
+    "name": "Bookshelf",
+    "model_name": "OpenRobotics/Bookshelf",
+    "x": 61.474,
+    "y": -19.399,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "Standing person",
+    "model_name": "OpenRobotics/Standing person",
+    "x": 84.417,
+    "y": -13.725,
+    "yaw": -1.3228,
+    "z": 0
+  },
+  {
+    "name": "Fountain",
+    "model_name": "OpenRobotics/Fountain",
+    "x": 58.704,
+    "y": -22.52,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "Pine Tree",
+    "model_name": "OpenRobotics/Pine Tree",
+    "x": 56.398,
+    "y": -25.53,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "Pine Tree",
+    "model_name": "OpenRobotics/Pine Tree",
+    "x": 55.562,
+    "y": -21.89,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "WhiteChipChair",
+    "model_name": "OpenRobotics/WhiteChipChair",
+    "x": 66.512,
+    "y": -4.777,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "WhiteChipChair",
+    "model_name": "OpenRobotics/WhiteChipChair",
+    "x": 68.104,
+    "y": -4.777,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "WhiteChipChair",
+    "model_name": "OpenRobotics/WhiteChipChair",
+    "x": 80.167,
+    "y": -6.146,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "WhiteChipChair",
+    "model_name": "OpenRobotics/WhiteChipChair",
+    "x": 80.108,
+    "y": -4.822,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "WhiteChipChair",
+    "model_name": "OpenRobotics/WhiteChipChair",
+    "x": 78.431,
+    "y": -4.852,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "WhiteChipChair",
+    "model_name": "OpenRobotics/WhiteChipChair",
+    "x": 66.551,
+    "y": -6.172,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "WhiteChipChair",
+    "model_name": "OpenRobotics/WhiteChipChair",
+    "x": 68.104,
+    "y": -6.152,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "WhiteChipChair",
+    "model_name": "OpenRobotics/WhiteChipChair",
+    "x": 81.902,
+    "y": -6.175,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "WhiteChipChair",
+    "model_name": "OpenRobotics/WhiteChipChair",
+    "x": 81.843,
+    "y": -4.822,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "WhiteChipChair",
+    "model_name": "OpenRobotics/WhiteChipChair",
+    "x": 76.666,
+    "y": -6.175,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "WhiteChipChair",
+    "model_name": "OpenRobotics/WhiteChipChair",
+    "x": 76.695,
+    "y": -4.852,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "WhiteChipChair",
+    "model_name": "OpenRobotics/WhiteChipChair",
+    "x": 78.402,
+    "y": -6.175,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "WhiteChipChair",
+    "model_name": "OpenRobotics/WhiteChipChair",
+    "x": 60.282,
+    "y": -4.639,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "WhiteChipChair",
+    "model_name": "OpenRobotics/WhiteChipChair",
+    "x": 60.282,
+    "y": -5.956,
+    "yaw": 1.5794,
+    "z": 0
+  },
+  {
+    "name": "WhiteChipChair",
+    "model_name": "OpenRobotics/WhiteChipChair",
+    "x": 58.601,
+    "y": -4.634,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "WhiteChipChair",
+    "model_name": "OpenRobotics/WhiteChipChair",
+    "x": 58.661,
+    "y": -5.905,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "WhiteChipChair",
+    "model_name": "OpenRobotics/WhiteChipChair",
+    "x": 66.624,
+    "y": -7.405,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "WhiteChipChair",
+    "model_name": "OpenRobotics/WhiteChipChair",
+    "x": 68.325,
+    "y": -7.424,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "Pine Tree",
+    "model_name": "OpenRobotics/Pine Tree",
+    "x": 50.623,
+    "y": -4.88,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "Pine Tree",
+    "model_name": "OpenRobotics/Pine Tree",
+    "x": 39.184,
+    "y": -9.513,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "Pine Tree",
+    "model_name": "OpenRobotics/Pine Tree",
+    "x": 43.399,
+    "y": -5.561,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "Pine Tree",
+    "model_name": "OpenRobotics/Pine Tree",
+    "x": 37.558,
+    "y": -5.327,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "Fountain",
+    "model_name": "OpenRobotics/Fountain",
+    "x": 48.791,
+    "y": -7.55,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "Fountain",
+    "model_name": "OpenRobotics/Fountain",
+    "x": 36.383,
+    "y": -7.629,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "StorageRack",
+    "model_name": "OpenRobotics/StorageRack",
+    "x": 84.3,
+    "y": -26.46,
+    "yaw": 2.1193,
+    "z": 0
+  },
+  {
+    "name": "StorageRack",
+    "model_name": "OpenRobotics/StorageRack",
+    "x": 85.559,
+    "y": -28.605,
+    "yaw": 2.2585,
+    "z": 0
+  },
+  {
+    "name": "WhiteChipChair",
+    "model_name": "OpenRobotics/WhiteChipChair",
+    "x": 71.586,
+    "y": -18.048,
+    "yaw": 0.0267,
+    "z": 0
+  },
+  {
+    "name": "WhiteChipChair",
+    "model_name": "OpenRobotics/WhiteChipChair",
+    "x": 66.203,
+    "y": -15.117,
+    "yaw": 3.2165,
+    "z": 0
+  },
+  {
+    "name": "WhiteChipChair",
+    "model_name": "OpenRobotics/WhiteChipChair",
+    "x": 66.423,
+    "y": -17.055,
+    "yaw": 3.2142,
+    "z": 0
+  },
+  {
+    "name": "WhiteChipChair",
+    "model_name": "OpenRobotics/WhiteChipChair",
+    "x": 61.611,
+    "y": -17.044,
+    "yaw": -0.0172,
+    "z": 0
+  },
+  {
+    "name": "WhiteChipChair",
+    "model_name": "OpenRobotics/WhiteChipChair",
+    "x": 61.617,
+    "y": -15.373,
+    "yaw": 0.0104,
+    "z": 0
+  },
+  {
+    "name": "WhiteChipChair",
+    "model_name": "OpenRobotics/WhiteChipChair",
+    "x": 59.361,
+    "y": -31.005,
+    "yaw": 2.7611,
+    "z": 0
+  },
+  {
+    "name": "WhiteChipChair",
+    "model_name": "OpenRobotics/WhiteChipChair",
+    "x": 54.25,
+    "y": -19.142,
+    "yaw": 3.217,
+    "z": 0
+  },
+  {
+    "name": "Gazebo",
+    "model_name": "OpenRobotics/Gazebo",
+    "x": 57.494,
+    "y": -15.3,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "Lamp Post",
+    "model_name": "OpenRobotics/Lamp Post",
+    "x": 49.983,
+    "y": -12.676,
+    "yaw": 2.0195,
+    "z": 0
+  },
+  {
+    "name": "Lamp Post",
+    "model_name": "OpenRobotics/Lamp Post",
+    "x": 45.905,
+    "y": -36.245,
+    "yaw": 1.1264,
+    "z": 0
+  },
+  {
+    "name": "Lamp Post",
+    "model_name": "OpenRobotics/Lamp Post",
+    "x": 58.589,
+    "y": -34.537,
+    "yaw": -0.9358,
+    "z": 0
+  },
+  {
+    "name": "Lamp Post",
+    "model_name": "OpenRobotics/Lamp Post",
+    "x": 76.035,
+    "y": -36.303,
+    "yaw": 3.9247,
+    "z": 0
+  },
+  {
+    "name": "Playground",
+    "model_name": "OpenRobotics/Playground",
+    "x": 24.833,
+    "y": -7.527,
+    "yaw": 0,
+    "z": 0
+  },
+  {
+    "name": "SUV",
+    "model_name": "OpenRobotics/SUV",
+    "x": 44.274,
+    "y": -15.947,
+    "yaw": 0,
+    "z": 0
+  },
+  {
+    "name": "FemaleVisitor",
+    "model_name": "OpenRobotics/FemaleVisitor",
+    "x": 83.534,
+    "y": -26.595,
+    "yaw": 1.4567,
+    "z": 0
+  },
+  {
+    "name": "FemaleVisitor",
+    "model_name": "OpenRobotics/FemaleVisitor",
+    "x": 67.351,
+    "y": -16.917,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "FemaleVisitor",
+    "model_name": "OpenRobotics/FemaleVisitor",
+    "x": 37.272,
+    "y": -9.703,
+    "yaw": 2.9362,
+    "z": 0
+  },
+  {
+    "name": "FemaleVisitor",
+    "model_name": "OpenRobotics/FemaleVisitor",
+    "x": 48.013,
+    "y": -13.904,
+    "yaw": -0.8809,
+    "z": 0
+  },
+  {
+    "name": "FemaleVisitor",
+    "model_name": "OpenRobotics/FemaleVisitor",
+    "x": 66.59,
+    "y": -29.69,
+    "yaw": 2.9736,
+    "z": 0
+  },
+  {
+    "name": "FemaleVisitor",
+    "model_name": "OpenRobotics/FemaleVisitor",
+    "x": 81.425,
+    "y": -14.347,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "FemaleVisitor",
+    "model_name": "OpenRobotics/FemaleVisitor",
+    "x": 86.514,
+    "y": -27.81,
+    "yaw": -0.8787,
+    "z": 0
+  },
+  {
+    "name": "FemaleVisitor",
+    "model_name": "OpenRobotics/FemaleVisitor",
+    "x": 82.011,
+    "y": -31.745,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "FemaleVisitor",
+    "model_name": "OpenRobotics/FemaleVisitor",
+    "x": 57.373,
+    "y": -39.606,
+    "yaw": 2.1817,
+    "z": 0
+  },
+  {
+    "name": "FemaleVisitor",
+    "model_name": "OpenRobotics/FemaleVisitor",
+    "x": 54.995,
+    "y": -20.02,
+    "yaw": 4.5836,
+    "z": 0
+  },
+  {
+    "name": "FemaleVisitor",
+    "model_name": "OpenRobotics/FemaleVisitor",
+    "x": 61.396,
+    "y": -3.978,
+    "yaw": -0.5309,
+    "z": 0
+  },
+  {
+    "name": "FemaleVisitor",
+    "model_name": "OpenRobotics/FemaleVisitor",
+    "x": 45.243,
+    "y": -5.297,
+    "yaw": 0.0897,
+    "z": 0
+  },
+  {
+    "name": "FemaleVisitor",
+    "model_name": "OpenRobotics/FemaleVisitor",
+    "x": 29.466,
+    "y": -9.403,
+    "yaw": 3.662,
+    "z": 0
+  },
+  {
+    "name": "FemaleVisitor",
+    "model_name": "OpenRobotics/FemaleVisitor",
+    "x": 19.524,
+    "y": -5.459,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "Cafe",
+    "model_name": "OpenRobotics/Cafe",
+    "x": 24.458,
+    "y": -19.401,
+    "yaw": 1.5711,
+    "z": 0
+  },
+  {
+    "name": "VisitorKidSit",
+    "model_name": "OpenRobotics/VisitorKidSit",
+    "x": 45.12,
+    "y": -9.255,
+    "yaw": 2.7602,
+    "z": 0
+  },
+  {
+    "name": "VisitorKidSit",
+    "model_name": "OpenRobotics/VisitorKidSit",
+    "x": 53.984,
+    "y": -19.699,
+    "yaw": -1.4932,
+    "z": 0
+  },
+  {
+    "name": "Chair",
+    "model_name": "OpenRobotics/Chair",
+    "x": 82.062,
+    "y": -23.199,
+    "yaw": -1.5385,
+    "z": 0
+  },
+  {
+    "name": "Chair",
+    "model_name": "OpenRobotics/Chair",
+    "x": 83.391,
+    "y": -23.12,
+    "yaw": -0.1608,
+    "z": 0
+  },
+  {
+    "name": "Chair",
+    "model_name": "OpenRobotics/Chair",
+    "x": 85.097,
+    "y": -23.223,
+    "yaw": -1.5708,
+    "z": 0
+  },
+  {
+    "name": "KitchenCountertop",
+    "model_name": "OpenRobotics/KitchenCountertop",
+    "x": 83.79,
+    "y": -13.782,
+    "yaw": -0.0098,
+    "z": 0
+  },
+  {
+    "name": "Table",
+    "model_name": "OpenRobotics/Table",
+    "x": 82.66,
+    "y": -17.53,
+    "yaw": 3.1555,
+    "z": 0
+  },
+  {
+    "name": "KitchenSink",
+    "model_name": "OpenRobotics/KitchenSink",
+    "x": 83.778,
+    "y": -15.389,
+    "yaw": 0,
+    "z": 0
+  },
+  {
+    "name": "MiniSofa",
+    "model_name": "OpenRobotics/MiniSofa",
+    "x": 81.104,
+    "y": -17.399,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "FemaleVisitorSit",
+    "model_name": "OpenRobotics/FemaleVisitorSit",
+    "x": 59.21,
+    "y": -30.761,
+    "yaw": 4.172,
+    "z": 0
+  },
+  {
+    "name": "FemaleVisitorSit",
+    "model_name": "OpenRobotics/FemaleVisitorSit",
+    "x": 83.523,
+    "y": -23.107,
+    "yaw": 1.529,
+    "z": 0
+  },
+  {
+    "name": "FemaleVisitorSit",
+    "model_name": "OpenRobotics/FemaleVisitorSit",
+    "x": 81.145,
+    "y": -17.409,
+    "yaw": 0.132,
+    "z": 0
+  },
+  {
+    "name": "FemaleVisitorSit",
+    "model_name": "OpenRobotics/FemaleVisitorSit",
+    "x": 59.775,
+    "y": -5.662,
+    "yaw": 3.2972,
+    "z": 0
+  },
+  {
+    "name": "FemaleVisitorSit",
+    "model_name": "OpenRobotics/FemaleVisitorSit",
+    "x": 61.884,
+    "y": -17.549,
+    "yaw": 1.2326,
+    "z": 0
+  },
+  {
+    "name": "FemaleVisitorSit",
+    "model_name": "OpenRobotics/FemaleVisitorSit",
+    "x": 71.769,
+    "y": -17.44,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "FemaleVisitorSit",
+    "model_name": "OpenRobotics/FemaleVisitorSit",
+    "x": 76.258,
+    "y": -41.082,
+    "yaw": 3.2105,
+    "z": 0
+  },
+  {
+    "name": "Chair",
+    "model_name": "OpenRobotics/Chair",
+    "x": 45.114,
+    "y": -9.265,
+    "yaw": 1.5798,
+    "z": 0
+  },
+  {
+    "name": "Pine Tree",
+    "model_name": "OpenRobotics/Pine Tree",
+    "x": 31.978,
+    "y": -27.414,
+    "yaw": 2.4511,
+    "z": 0
+  },
+  {
+    "name": "Pine Tree",
+    "model_name": "OpenRobotics/Pine Tree",
+    "x": 31.92,
+    "y": -33.639,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "Pine Tree",
+    "model_name": "OpenRobotics/Pine Tree",
+    "x": 25.623,
+    "y": -27.436,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "Pine Tree",
+    "model_name": "OpenRobotics/Pine Tree",
+    "x": 25.691,
+    "y": -33.614,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "FemaleVisitor",
+    "model_name": "OpenRobotics/FemaleVisitor",
+    "x": 29.027,
+    "y": -34.741,
+    "yaw": 4.6244,
+    "z": 0
+  },
+  {
+    "name": "FemaleVisitor",
+    "model_name": "OpenRobotics/FemaleVisitor",
+    "x": 29.768,
+    "y": -28.563,
+    "yaw": 2.8159,
+    "z": 0
+  },
+  {
+    "name": "MainTable",
+    "model_name": "OpenRobotics/MainTable",
+    "x": 43.4,
+    "y": -20.749,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "MainTable",
+    "model_name": "OpenRobotics/MainTable",
+    "x": 36.155,
+    "y": -28.366,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "Construction Cone",
+    "model_name": "OpenRobotics/Construction Cone",
+    "x": 38.673,
+    "y": -36.63,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "Construction Cone",
+    "model_name": "OpenRobotics/Construction Cone",
+    "x": 35.457,
+    "y": -37.66,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "Construction Cone",
+    "model_name": "OpenRobotics/Construction Cone",
+    "x": 31.973,
+    "y": -38.598,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "Standing person",
+    "model_name": "OpenRobotics/Standing person",
+    "x": 35.106,
+    "y": -28.095,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "Standing person",
+    "model_name": "OpenRobotics/Standing person",
+    "x": 42.418,
+    "y": -20.749,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "Bookshelf",
+    "model_name": "OpenRobotics/Bookshelf",
+    "x": 43.023,
+    "y": -23.551,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "Bookshelf",
+    "model_name": "OpenRobotics/Bookshelf",
+    "x": 45.547,
+    "y": -20.26,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "Bookshelf",
+    "model_name": "OpenRobotics/Bookshelf",
+    "x": 45.433,
+    "y": -23.593,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "Bookshelf",
+    "model_name": "OpenRobotics/Bookshelf",
+    "x": 47.528,
+    "y": -20.24,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "Bookshelf",
+    "model_name": "OpenRobotics/Bookshelf",
+    "x": 47.509,
+    "y": -23.631,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "Bookshelf",
+    "model_name": "OpenRobotics/Bookshelf",
+    "x": 38.268,
+    "y": -30.85,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "Bookshelf",
+    "model_name": "OpenRobotics/Bookshelf",
+    "x": 44.694,
+    "y": -27.894,
+    "yaw": 2.1996,
+    "z": 0
+  },
+  {
+    "name": "Bookshelf",
+    "model_name": "OpenRobotics/Bookshelf",
+    "x": 46.158,
+    "y": -30.181,
+    "yaw": 2.188,
+    "z": 0
+  },
+  {
+    "name": "StorageRack",
+    "model_name": "OpenRobotics/StorageRack",
+    "x": 35.451,
+    "y": -34.087,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "StorageRack",
+    "model_name": "OpenRobotics/StorageRack",
+    "x": 41.811,
+    "y": -26.631,
+    "yaw": 0.0141,
+    "z": 0
+  },
+  {
+    "name": "StorageRack",
+    "model_name": "OpenRobotics/StorageRack",
+    "x": 38.835,
+    "y": -26.631,
+    "yaw": 0,
+    "z": 0
+  },
+  {
+    "name": "StorageRack",
+    "model_name": "OpenRobotics/StorageRack",
+    "x": 36.053,
+    "y": -30.497,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "FemaleVisitor",
+    "model_name": "OpenRobotics/FemaleVisitor",
+    "x": 25.778,
+    "y": -19.192,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "Standing person",
+    "model_name": "OpenRobotics/Standing person",
+    "x": 33.216,
+    "y": -16.829,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "Standing person",
+    "model_name": "OpenRobotics/Standing person",
+    "x": 37.874,
+    "y": -21.139,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "Cafe table",
+    "model_name": "OpenRobotics/Cafe table",
+    "x": 24.005,
+    "y": -20.797,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "Cafe table",
+    "model_name": "OpenRobotics/Cafe table",
+    "x": 23.888,
+    "y": -17.823,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "Cafe table",
+    "model_name": "OpenRobotics/Cafe table",
+    "x": 29.239,
+    "y": -21.005,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "Cafe table",
+    "model_name": "OpenRobotics/Cafe table",
+    "x": 29.265,
+    "y": -17.914,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "Standing person",
+    "model_name": "OpenRobotics/Standing person",
+    "x": 13.668,
+    "y": -19.733,
+    "yaw": 4.1565,
+    "z": 0
+  },
+  {
+    "name": "ParkingTrolleyMax",
+    "model_name": "OpenRobotics/ParkingTrolleyMax",
+    "x": 38.565,
+    "y": -34.448,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "Oak tree",
+    "model_name": "OpenRobotics/Oak tree",
+    "x": 17.626,
+    "y": -35.675,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "Fountain",
+    "model_name": "OpenRobotics/Fountain",
+    "x": 10.154,
+    "y": -33.305,
+    "yaw": 0.9381,
+    "z": 0
+  },
+  {
+    "name": "Pine Tree",
+    "model_name": "OpenRobotics/Pine Tree",
+    "x": 12.756,
+    "y": -28.807,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "Pine Tree",
+    "model_name": "OpenRobotics/Pine Tree",
+    "x": 9.251,
+    "y": -30.994,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "Pine Tree",
+    "model_name": "OpenRobotics/Pine Tree",
+    "x": 6.285,
+    "y": -36.297,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "Lamp Post",
+    "model_name": "OpenRobotics/Lamp Post",
+    "x": 19.02,
+    "y": -30.88,
+    "yaw": 2.6122,
+    "z": 0
+  },
+  {
+    "name": "Lamp Post",
+    "model_name": "OpenRobotics/Lamp Post",
+    "x": 7.757,
+    "y": -32.58,
+    "yaw": 1.1999,
+    "z": 0
+  },
+  {
+    "name": "PotatoChipChair",
+    "model_name": "OpenRobotics/PotatoChipChair",
+    "x": 13.801,
+    "y": -42.735,
+    "yaw": -1.5208,
+    "z": 0
+  },
+  {
+    "name": "PotatoChipChair",
+    "model_name": "OpenRobotics/PotatoChipChair",
+    "x": 19.446,
+    "y": -41.951,
+    "yaw": -1.3558,
+    "z": 0
+  },
+  {
+    "name": "PotatoChipChair",
+    "model_name": "OpenRobotics/PotatoChipChair",
+    "x": 26.112,
+    "y": -38.957,
+    "yaw": -1.5488,
+    "z": 0
+  },
+  {
+    "name": "FemaleVisitor",
+    "model_name": "OpenRobotics/FemaleVisitor",
+    "x": 79.072,
+    "y": -25.621,
+    "yaw": 2.8826,
+    "z": 0
+  },
+  {
+    "name": "FemaleVisitor",
+    "model_name": "OpenRobotics/FemaleVisitor",
+    "x": 65.461,
+    "y": -29.853,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "FemaleVisitor",
+    "model_name": "OpenRobotics/FemaleVisitor",
+    "x": 82.102,
+    "y": -40.68,
+    "yaw": 0.3931,
+    "z": 0
+  },
+  {
+    "name": "FemaleVisitor",
+    "model_name": "OpenRobotics/FemaleVisitor",
+    "x": 88.524,
+    "y": -42.819,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "FemaleVisitor",
+    "model_name": "OpenRobotics/FemaleVisitor",
+    "x": 77.419,
+    "y": -24.447,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "Bookshelf",
+    "model_name": "OpenRobotics/Bookshelf",
+    "x": 89.117,
+    "y": -48.868,
+    "yaw": 3.1321,
+    "z": 0
+  },
+  {
+    "name": "Bookshelf",
+    "model_name": "OpenRobotics/Bookshelf",
+    "x": 87.054,
+    "y": -48.837,
+    "yaw": 3.1357,
+    "z": 0
+  },
+  {
+    "name": "Standing person",
+    "model_name": "OpenRobotics/Standing person",
+    "x": 89.983,
+    "y": -42.824,
+    "yaw": 4.3674,
+    "z": 0
+  },
+  {
+    "name": "Standing person",
+    "model_name": "OpenRobotics/Standing person",
+    "x": 86.473,
+    "y": -45.493,
+    "yaw": -0.8484,
+    "z": 0
+  },
+  {
+    "name": "Standing person",
+    "model_name": "OpenRobotics/Standing person",
+    "x": 84.437,
+    "y": -42.951,
+    "yaw": -0.1549,
+    "z": 0
+  },
+  {
+    "name": "Standing person",
+    "model_name": "OpenRobotics/Standing person",
+    "x": 82.559,
+    "y": -44.468,
+    "yaw": 2.5208,
+    "z": 0
+  },
+  {
+    "name": "Standing person",
+    "model_name": "OpenRobotics/Standing person",
+    "x": 80.243,
+    "y": -43.334,
+    "yaw": -0.4426,
+    "z": 0
+  },
+  {
+    "name": "Standing person",
+    "model_name": "OpenRobotics/Standing person",
+    "x": 79.233,
+    "y": -45.911,
+    "yaw": 1.6712,
+    "z": 0
+  },
+  {
+    "name": "Standing person",
+    "model_name": "OpenRobotics/Standing person",
+    "x": 74.81,
+    "y": -42.895,
+    "yaw": 1.0153,
+    "z": 0
+  },
+  {
+    "name": "Standing person",
+    "model_name": "OpenRobotics/Standing person",
+    "x": 87.247,
+    "y": -35.101,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "PotatoChipChair",
+    "model_name": "OpenRobotics/PotatoChipChair",
+    "x": 74.921,
+    "y": -46.296,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "PotatoChipChair",
+    "model_name": "OpenRobotics/PotatoChipChair",
+    "x": 77.5,
+    "y": -45.96,
+    "yaw": 0.0648,
+    "z": 0
+  },
+  {
+    "name": "MaleVisitorSit",
+    "model_name": "OpenRobotics/MaleVisitorSit",
+    "x": 87.486,
+    "y": -36.222,
+    "yaw": -0.4547,
+    "z": 0
+  },
+  {
+    "name": "MaleVisitorSit",
+    "model_name": "OpenRobotics/MaleVisitorSit",
+    "x": 78.162,
+    "y": -41.021,
+    "yaw": 2.9079,
+    "z": 0
+  },
+  {
+    "name": "MaleVisitorSit",
+    "model_name": "OpenRobotics/MaleVisitorSit",
+    "x": 74.4,
+    "y": -45.857,
+    "yaw": 2.8,
+    "z": 0
+  },
+  {
+    "name": "MaleVisitorSit",
+    "model_name": "OpenRobotics/MaleVisitorSit",
+    "x": 77.818,
+    "y": -45.957,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "LampAndStand",
+    "model_name": "OpenRobotics/LampAndStand",
+    "x": 79.687,
+    "y": -40.34,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "VisitorKidSit",
+    "model_name": "OpenRobotics/VisitorKidSit",
+    "x": 85.528,
+    "y": -35.274,
+    "yaw": 0.0907,
+    "z": 0
+  },
+  {
+    "name": "VisitorKidSit",
+    "model_name": "OpenRobotics/VisitorKidSit",
+    "x": 75.434,
+    "y": -45.994,
+    "yaw": 2.9794,
+    "z": 0
+  },
+  {
+    "name": "VisitorKidSit",
+    "model_name": "OpenRobotics/VisitorKidSit",
+    "x": 77.719,
+    "y": -45.41,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "FemaleVisitorSit",
+    "model_name": "OpenRobotics/FemaleVisitorSit",
+    "x": 26.201,
+    "y": -39.159,
+    "yaw": -0.0918,
+    "z": 0
+  },
+  {
+    "name": "FemaleVisitorSit",
+    "model_name": "OpenRobotics/FemaleVisitorSit",
+    "x": 19.626,
+    "y": -42.195,
+    "yaw": -0.0797,
+    "z": 0
+  },
+  {
+    "name": "Pine Tree",
+    "model_name": "OpenRobotics/Pine Tree",
+    "x": 45.337,
+    "y": -43.661,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "Fountain",
+    "model_name": "OpenRobotics/Fountain",
+    "x": 69.799,
+    "y": -20.413,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "Cafe table",
+    "model_name": "OpenRobotics/Cafe table",
+    "x": 62.852,
+    "y": -42.189,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "Cafe table",
+    "model_name": "OpenRobotics/Cafe table",
+    "x": 61.144,
+    "y": -44.055,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "Cafe table",
+    "model_name": "OpenRobotics/Cafe table",
+    "x": 64.717,
+    "y": -44.118,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "Cafe table",
+    "model_name": "OpenRobotics/Cafe table",
+    "x": 62.915,
+    "y": -46.205,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "Bookshelf",
+    "model_name": "OpenRobotics/Bookshelf",
+    "x": 56.072,
+    "y": -43.456,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "Bookshelf",
+    "model_name": "OpenRobotics/Bookshelf",
+    "x": 56.072,
+    "y": -45.999,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "Bookshelf",
+    "model_name": "OpenRobotics/Bookshelf",
+    "x": 56.072,
+    "y": -48.997,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "Bookshelf",
+    "model_name": "OpenRobotics/Bookshelf",
+    "x": 50.808,
+    "y": -45.222,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "Bookshelf",
+    "model_name": "OpenRobotics/Bookshelf",
+    "x": 50.933,
+    "y": -47.594,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "Bookshelf",
+    "model_name": "OpenRobotics/Bookshelf",
+    "x": 53.679,
+    "y": -45.097,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "Bookshelf",
+    "model_name": "OpenRobotics/Bookshelf",
+    "x": 53.857,
+    "y": -47.629,
+    "yaw": 1.5574,
+    "z": 0
+  },
+  {
+    "name": "Bookshelf",
+    "model_name": "OpenRobotics/Bookshelf",
+    "x": 56.042,
+    "y": -39.489,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "FemaleVisitor",
+    "model_name": "OpenRobotics/FemaleVisitor",
+    "x": 56.851,
+    "y": -47.367,
+    "yaw": -1.3179,
+    "z": 0
+  },
+  {
+    "name": "FemaleVisitor",
+    "model_name": "OpenRobotics/FemaleVisitor",
+    "x": 61.914,
+    "y": -46.125,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "FemaleVisitor",
+    "model_name": "OpenRobotics/FemaleVisitor",
+    "x": 52.521,
+    "y": -47.558,
+    "yaw": 0.0056,
+    "z": 0
+  },
+  {
+    "name": "MainTable",
+    "model_name": "OpenRobotics/MainTable",
+    "x": 51.827,
+    "y": -50.804,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "MainTable",
+    "model_name": "OpenRobotics/MainTable",
+    "x": 62.896,
+    "y": -49.521,
+    "yaw": 3.139,
+    "z": 0
+  },
+  {
+    "name": "MainTable",
+    "model_name": "OpenRobotics/MainTable",
+    "x": 45.655,
+    "y": -46.241,
+    "yaw": 3.1557,
+    "z": 0
+  },
+  {
+    "name": "Standing person",
+    "model_name": "OpenRobotics/Standing person",
+    "x": 62.966,
+    "y": -50.356,
+    "yaw": 3.1267,
+    "z": 0
+  },
+  {
+    "name": "Standing person",
+    "model_name": "OpenRobotics/Standing person",
+    "x": 56.872,
+    "y": -43.54,
+    "yaw": 4.5212,
+    "z": 0
+  },
+  {
+    "name": "Standing person",
+    "model_name": "OpenRobotics/Standing person",
+    "x": 50.973,
+    "y": -51.198,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "Table",
+    "model_name": "OpenRobotics/Table",
+    "x": 45.553,
+    "y": -48.408,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "Table",
+    "model_name": "OpenRobotics/Table",
+    "x": 48.19,
+    "y": -48.376,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "Table",
+    "model_name": "OpenRobotics/Table",
+    "x": 45.51,
+    "y": -51.34,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "Table",
+    "model_name": "OpenRobotics/Table",
+    "x": 48.414,
+    "y": -51.317,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "Table",
+    "model_name": "OpenRobotics/Table",
+    "x": 89.32,
+    "y": -44.435,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "Table",
+    "model_name": "OpenRobotics/Table",
+    "x": 85.298,
+    "y": -44.479,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "Table",
+    "model_name": "OpenRobotics/Table",
+    "x": 79.005,
+    "y": -48.52,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "Table",
+    "model_name": "OpenRobotics/Table",
+    "x": 82.304,
+    "y": -48.555,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "Playground",
+    "model_name": "OpenRobotics/Playground",
+    "x": 92.533,
+    "y": -15.019,
+    "yaw": 0,
+    "z": 0
+  },
+  {
+    "name": "Pine Tree",
+    "model_name": "OpenRobotics/Pine Tree",
+    "x": 89.376,
+    "y": -24.444,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "StorageRack",
+    "model_name": "OpenRobotics/StorageRack",
+    "x": 72.118,
+    "y": -44.85,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "StorageRack",
+    "model_name": "OpenRobotics/StorageRack",
+    "x": 70.806,
+    "y": -44.901,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "Bookshelf",
+    "model_name": "OpenRobotics/Bookshelf",
+    "x": 73.38,
+    "y": -44.718,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "Bookshelf",
+    "model_name": "OpenRobotics/Bookshelf",
+    "x": 73.414,
+    "y": -43.353,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "FemaleVisitor",
+    "model_name": "OpenRobotics/FemaleVisitor",
+    "x": 41.604,
+    "y": -29.588,
+    "yaw": 3.6307,
+    "z": 0
+  },
+  {
+    "name": "FemaleVisitor",
+    "model_name": "OpenRobotics/FemaleVisitor",
+    "x": 46.043,
+    "y": -26.793,
+    "yaw": -0.8359,
+    "z": 0
+  },
+  {
+    "name": "FemaleVisitor",
+    "model_name": "OpenRobotics/FemaleVisitor",
+    "x": 54.912,
+    "y": -28.212,
+    "yaw": 4.5179,
+    "z": 0
+  },
+  {
+    "name": "FemaleVisitor",
+    "model_name": "OpenRobotics/FemaleVisitor",
+    "x": 42.433,
+    "y": -33.864,
+    "yaw": 0.906,
+    "z": 0
+  },
+  {
+    "name": "Cafe table",
+    "model_name": "OpenRobotics/Cafe table",
+    "x": 32.457,
+    "y": -54.075,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "Cafe table",
+    "model_name": "OpenRobotics/Cafe table",
+    "x": 42.94,
+    "y": -47.16,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "Cafe table",
+    "model_name": "OpenRobotics/Cafe table",
+    "x": 42.94,
+    "y": -50.112,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "Cafe table",
+    "model_name": "OpenRobotics/Cafe table",
+    "x": 42.915,
+    "y": -52.965,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "Table",
+    "model_name": "OpenRobotics/Table",
+    "x": 39.767,
+    "y": -47.013,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "Table",
+    "model_name": "OpenRobotics/Table",
+    "x": 39.816,
+    "y": -51.317,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "Table",
+    "model_name": "OpenRobotics/Table",
+    "x": 36.913,
+    "y": -49.103,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "Table",
+    "model_name": "OpenRobotics/Table",
+    "x": 36.892,
+    "y": -52.623,
+    "yaw": -1.5708,
+    "z": 0
+  },
+  {
+    "name": "MainTable",
+    "model_name": "OpenRobotics/MainTable",
+    "x": 36.815,
+    "y": -54.687,
+    "yaw": 3.1166,
+    "z": 0
+  },
+  {
+    "name": "Standing person",
+    "model_name": "OpenRobotics/Standing person",
+    "x": 36.175,
+    "y": -55.647,
+    "yaw": 2.6923,
+    "z": 0
+  },
+  {
+    "name": "Standing person",
+    "model_name": "OpenRobotics/Standing person",
+    "x": 42.079,
+    "y": -50.014,
+    "yaw": -1.188,
+    "z": 0
+  },
+  {
+    "name": "Standing person",
+    "model_name": "OpenRobotics/Standing person",
+    "x": 40.406,
+    "y": -55.622,
+    "yaw": 2.5492,
+    "z": 0
+  },
+  {
+    "name": "PotatoChipChair",
+    "model_name": "OpenRobotics/PotatoChipChair",
+    "x": 43.425,
+    "y": -42.198,
+    "yaw": 1.8297,
+    "z": 0
+  },
+  {
+    "name": "PotatoChipChair",
+    "model_name": "OpenRobotics/PotatoChipChair",
+    "x": 41.45,
+    "y": -42.557,
+    "yaw": 1.783,
+    "z": 0
+  },
+  {
+    "name": "PotatoChipChair",
+    "model_name": "OpenRobotics/PotatoChipChair",
+    "x": 39.393,
+    "y": -42.999,
+    "yaw": 1.8298,
+    "z": 0
+  },
+  {
+    "name": "PotatoChipChair",
+    "model_name": "OpenRobotics/PotatoChipChair",
+    "x": 25.168,
+    "y": -45.941,
+    "yaw": 1.7718,
+    "z": 0
+  },
+  {
+    "name": "PotatoChipChair",
+    "model_name": "OpenRobotics/PotatoChipChair",
+    "x": 23.17,
+    "y": -46.297,
+    "yaw": 1.7734,
+    "z": 0
+  },
+  {
+    "name": "PotatoChipChair",
+    "model_name": "OpenRobotics/PotatoChipChair",
+    "x": 21.135,
+    "y": -46.686,
+    "yaw": 1.7698,
+    "z": 0
+  },
+  {
+    "name": "PotatoChipChair",
+    "model_name": "OpenRobotics/PotatoChipChair",
+    "x": 13.055,
+    "y": -47.918,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "PotatoChipChair",
+    "model_name": "OpenRobotics/PotatoChipChair",
+    "x": 10.869,
+    "y": -47.957,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "PotatoChipChair",
+    "model_name": "OpenRobotics/PotatoChipChair",
+    "x": 8.682,
+    "y": -47.982,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "MainTable",
+    "model_name": "OpenRobotics/MainTable",
+    "x": 32.345,
+    "y": -50.421,
+    "yaw": 3.1523,
+    "z": 0
+  },
+  {
+    "name": "StorageRack",
+    "model_name": "OpenRobotics/StorageRack",
+    "x": 31.099,
+    "y": -47.633,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "StorageRack",
+    "model_name": "OpenRobotics/StorageRack",
+    "x": 32.567,
+    "y": -47.573,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "Bookshelf",
+    "model_name": "OpenRobotics/Bookshelf",
+    "x": 34.021,
+    "y": -47.425,
+    "yaw": -1.4328,
+    "z": 0
+  },
+  {
+    "name": "Standing person",
+    "model_name": "OpenRobotics/Standing person",
+    "x": 32.271,
+    "y": -51.236,
+    "yaw": 3.1,
+    "z": 0
+  },
+  {
+    "name": "FemaleVisitor",
+    "model_name": "OpenRobotics/FemaleVisitor",
+    "x": 33.265,
+    "y": -47.514,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "FemaleVisitor",
+    "model_name": "OpenRobotics/FemaleVisitor",
+    "x": 33.275,
+    "y": -52.768,
+    "yaw": -0.8726,
+    "z": 0
+  },
+  {
+    "name": "FemaleVisitor",
+    "model_name": "OpenRobotics/FemaleVisitor",
+    "x": 39.882,
+    "y": -44.359,
+    "yaw": 0.3326,
+    "z": 0
+  },
+  {
+    "name": "Bookshelf",
+    "model_name": "OpenRobotics/Bookshelf",
+    "x": 6.881,
+    "y": -54.438,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "Bookshelf",
+    "model_name": "OpenRobotics/Bookshelf",
+    "x": 10.998,
+    "y": -54.531,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "Bookshelf",
+    "model_name": "OpenRobotics/Bookshelf",
+    "x": 15.352,
+    "y": -52.177,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "Bookshelf",
+    "model_name": "OpenRobotics/Bookshelf",
+    "x": 19.197,
+    "y": -52.112,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "MainTable",
+    "model_name": "OpenRobotics/MainTable",
+    "x": 21.345,
+    "y": -54.867,
+    "yaw": 3.1199,
+    "z": 0
+  },
+  {
+    "name": "Standing person",
+    "model_name": "OpenRobotics/Standing person",
+    "x": 21.451,
+    "y": -55.691,
+    "yaw": 2.8147,
+    "z": 0
+  },
+  {
+    "name": "Bookshelf",
+    "model_name": "OpenRobotics/Bookshelf",
+    "x": 15.207,
+    "y": -54.576,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "Bookshelf",
+    "model_name": "OpenRobotics/Bookshelf",
+    "x": 19.16,
+    "y": -54.634,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "FemaleVisitor",
+    "model_name": "OpenRobotics/FemaleVisitor",
+    "x": 18.167,
+    "y": -53.137,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "FemaleVisitor",
+    "model_name": "OpenRobotics/FemaleVisitor",
+    "x": 13.755,
+    "y": -53.151,
+    "yaw": -0.5361,
+    "z": 0
+  },
+  {
+    "name": "FemaleVisitor",
+    "model_name": "OpenRobotics/FemaleVisitor",
+    "x": 21.954,
+    "y": -50.342,
+    "yaw": -0.4145,
+    "z": 0
+  },
+  {
+    "name": "Fridge",
+    "model_name": "OpenRobotics/Fridge",
+    "x": 95.019,
+    "y": -49.955,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "Construction Cone",
+    "model_name": "OpenRobotics/Construction Cone",
+    "x": 24.954,
+    "y": -48.665,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "Construction Cone",
+    "model_name": "OpenRobotics/Construction Cone",
+    "x": 27.05,
+    "y": -48.237,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "Construction Cone",
+    "model_name": "OpenRobotics/Construction Cone",
+    "x": 69.704,
+    "y": -48.04,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "Construction Cone",
+    "model_name": "OpenRobotics/Construction Cone",
+    "x": 69.731,
+    "y": -49.83,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "ParkingTrolleyMax",
+    "model_name": "OpenRobotics/ParkingTrolleyMax",
+    "x": 74.509,
+    "y": -48.78,
+    "yaw": 2.3703,
+    "z": 0
+  },
+  {
+    "name": "Fountain",
+    "model_name": "OpenRobotics/Fountain",
+    "x": 69.588,
+    "y": -13.917,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "Construction Cone",
+    "model_name": "OpenRobotics/Construction Cone",
+    "x": 25.132,
+    "y": -50.297,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "Construction Cone",
+    "model_name": "OpenRobotics/Construction Cone",
+    "x": 27.039,
+    "y": -50.054,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "MopCart3",
+    "model_name": "OpenRobotics/MopCart3",
+    "x": 23.298,
+    "y": -36.428,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "mopcart_dispenser",
+    "model_name": "OpenRobotics/TeleportDispenser",
+    "x": 23.346,
+    "y": -36.437,
+    "yaw": 1.5708,
+    "z": 0
+  },
+  {
+    "name": "mopcart_collector",
+    "model_name": "OpenRobotics/TeleportIngestor",
+    "x": 26.063,
+    "y": -48.377,
+    "yaw": 1.5708,
+    "z": 0
+  }
+]

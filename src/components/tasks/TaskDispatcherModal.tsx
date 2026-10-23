@@ -20,20 +20,22 @@ interface TaskDispatcherModalProps {
 }
 
 const FALLBACK_WAYPOINTS = [
+  'zone_1',
+  'zone_2',
+  'zone_3',
+  'zone_4',
+  's08',
+  'n08',
+  'junction_central_west',
+  'junction_central_east',
+  'charger_deliveryRobot_0',
+  'charger_cleanerBotA_0',
+  'charger_deliveryRobot_1',
+  'charger_deliveryRobot_2',
   'pantry',
   'lounge',
   'patrol_D1',
   'patrol_D2',
-  'patrol_A1',
-  'patrol_A2',
-  'patrol_B',
-  'patrol_C',
-  'supplies',
-  'presupplies',
-  'coe',
-  'hardware_2',
-  'tinyRobot1_charger',
-  'tinyRobot2_charger',
 ];
 
 export const TaskDispatcherModal: React.FC<TaskDispatcherModalProps> = ({
@@ -57,10 +59,12 @@ export const TaskDispatcherModal: React.FC<TaskDispatcherModalProps> = ({
   }, [fleets]);
 
   // Extract all valid waypoint names from nav graph
-  const allWaypoints = useMemo(() => {
+  const allWaypoints = useMemo<string[]>(() => {
     const currentLevel = buildingMap.levels?.[0];
     const extracted =
-      currentLevel?.nav_graphs?.flatMap((g) => g.vertices.map((v) => v.name).filter(Boolean)) || [];
+      currentLevel?.nav_graphs?.flatMap((g) =>
+        g.vertices.map((v) => v.name).filter((n): n is string => Boolean(n))
+      ) || [];
     return extracted.length > 0 ? Array.from(new Set(extracted)) : FALLBACK_WAYPOINTS;
   }, [buildingMap]);
 
@@ -102,19 +106,42 @@ export const TaskDispatcherModal: React.FC<TaskDispatcherModalProps> = ({
     if (isOpen && allWaypoints.length > 0) {
       setErrorMessage(null);
       setSuccessMessage(null);
-      const firstWp = allWaypoints[0] || 'pantry';
-      const secondWp = allWaypoints[1] || firstWp;
+      const isAirport = (buildingMap.name || '').toLowerCase().includes('airport');
+
+      const defPickup = allWaypoints.includes('s08')
+        ? 's08'
+        : allWaypoints.includes('pantry')
+        ? 'pantry'
+        : allWaypoints[0] || 's08';
+      const defDropoff = allWaypoints.includes('n13')
+        ? 'n13'
+        : allWaypoints.includes('zone_4')
+        ? 'zone_4'
+        : allWaypoints[1] || defPickup;
+      const defPatrol: string[] =
+        allWaypoints.includes('zone_1') && allWaypoints.includes('zone_2')
+          ? ['zone_1', 'zone_2']
+          : allWaypoints.slice(0, 2).length > 0
+          ? allWaypoints.slice(0, 2)
+          : [defPickup];
+
       if (!allWaypoints.includes(pickupPlace)) {
-        setPickupPlace(allWaypoints.includes('pantry') ? 'pantry' : firstWp);
+        setPickupPlace(defPickup);
       }
       if (!allWaypoints.includes(dropoffPlace)) {
-        setDropoffPlace(allWaypoints.includes('hardware_2') ? 'hardware_2' : secondWp);
+        setDropoffPlace(defDropoff);
       }
       if (!allWaypoints.includes(destinationWaypoint)) {
-        setDestinationWaypoint(allWaypoints.includes('pantry') ? 'pantry' : firstWp);
+        setDestinationWaypoint(defPickup);
+      }
+      if (cleanZone === 'clean_zone' && allWaypoints.includes('zone_1')) {
+        setCleanZone('zone_1');
+      }
+      if (patrolWaypoints.length === 0 || !allWaypoints.includes(patrolWaypoints[0])) {
+        setPatrolWaypoints(defPatrol);
       }
     }
-  }, [isOpen, allWaypoints]);
+  }, [isOpen, allWaypoints, buildingMap.name]);
 
   if (!isOpen) return null;
 
@@ -740,9 +767,11 @@ export const TaskDispatcherModal: React.FC<TaskDispatcherModalProps> = ({
                   outline: 'none',
                 }}
               >
+                <option value="zone_1">zone_1 (Concourse North Terminal)</option>
+                <option value="zone_2">zone_2 (Central Plaza & Food Court)</option>
+                <option value="zone_3">zone_3 (Concourse South Terminal)</option>
+                <option value="zone_4">zone_4 (Baggage Claim & Security Gates)</option>
                 <option value="clean_zone">clean_zone (Main Hall Sanitization Zone)</option>
-                <option value="zone_1">zone_1 (Corridor Area)</option>
-                <option value="zone_2">zone_2 (Lounge & Dining Area)</option>
               </select>
             </div>
           )}
