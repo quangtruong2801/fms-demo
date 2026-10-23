@@ -1,0 +1,1235 @@
+import React, { useRef, useEffect, useState, useCallback, useMemo } from 'react';
+import * as THREE from 'three';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import {
+  Box,
+  Eye,
+  Camera,
+  Layers,
+  RotateCcw,
+  Navigation,
+  Upload,
+  Sparkles,
+  HelpCircle,
+  Sliders,
+  Check,
+} from 'lucide-react';
+import { useFms } from '../../context/FmsContext';
+import { RobotState } from '../../types/rmf';
+import officeModelsData from '../../data/officeModels.json';
+
+interface ThreeDigitalTwin3DProps {
+  onSelectRobot?: (robot: RobotState | null) => void;
+}
+
+export const ThreeDigitalTwin3D: React.FC<ThreeDigitalTwin3DProps> = ({ onSelectRobot }) => {
+  const {
+    buildingMap,
+    fleets,
+    doorStates,
+    liftStates,
+    selectedFloor,
+    setSelectedFloor,
+    selectedRobot,
+    setSelectedRobot,
+  } = useFms();
+
+  const mountRef = useRef<HTMLDivElement | null>(null);
+  const sceneRef = useRef<THREE.Scene | null>(null);
+  const cameraRef = useRef<THREE.PerspectiveCamera | null>(null);
+  const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
+  const controlsRef = useRef<OrbitControls | null>(null);
+
+  // Group references
+  const mapGroupRef = useRef<THREE.Group>(new THREE.Group());
+  const robotsGroupRef = useRef<THREE.Group>(new THREE.Group());
+  const robotObjectsRef = useRef<Map<string, {
+    group: THREE.Group;
+    targetPos: THREE.Vector3;
+    targetRotY: number;
+    lidar: THREE.Mesh;
+    statusLed: THREE.Mesh;
+    nameSprite: THREE.Sprite;
+  }>>(new Map());
+
+  // Interaction & UI State
+  const [followingRobotName, setFollowingRobotName] = useState<string | null>(null);
+  const [showDemoProps, setShowDemoProps] = useState<boolean>(true);
+  const [showWaypoints, setShowWaypoints] = useState<boolean>(true);
+  const [showLanes, setShowLanes] = useState<boolean>(true);
+  const [showWalls, setShowWalls] = useState<boolean>(true);
+  const [showLabels, setShowLabels] = useState<boolean>(true);
+  const [customModelName, setCustomModelName] = useState<string | null>(null);
+  const [cameraPreset, setCameraPreset] = useState<'iso' | 'top' | 'front'>('iso');
+  const [fps, setFps] = useState<number>(60);
+  const [showSettingsDrawer, setShowSettingsDrawer] = useState<boolean>(false);
+
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const customGltfModelRef = useRef<THREE.Group | null>(null);
+
+  // Active level calculation
+  const currentLevel = useMemo(() => {
+    return buildingMap.levels.find((lvl) => lvl.name === selectedFloor) || buildingMap.levels[0];
+  }, [buildingMap, selectedFloor]);
+
+  // Determine if map coordinates are metric or pixel-based
+  const isMetric = useMemo(() => {
+    if (!currentLevel) return false;
+    const firstVert = currentLevel.nav_graphs?.[0]?.vertices?.[0];
+    const firstWall = currentLevel.wall_segments?.[0];
+    const testX = Math.abs(firstVert?.x ?? firstWall?.x1 ?? 500);
+    return testX < 100;
+  }, [currentLevel]);
+
+  // Metric centering offset
+  const originOffset = useMemo(() => {
+    if (!currentLevel) return { cx: 0, cz: 0, minX: 0, maxX: 0, minY: 0, maxY: 0 };
+    let minX = 99999, maxX = -99999, minY = 99999, maxY = -99999;
+    currentLevel.wall_segments?.forEach((w) => {
+      minX = Math.min(minX, w.x1, w.x2);
+      maxX = Math.max(maxX, w.x1, w.x2);
+      minY = Math.min(minY, w.y1, w.y2);
+      maxY = Math.max(maxY, w.y1, w.y2);
+    });
+    currentLevel.nav_graphs?.forEach((g) => {
+      g.vertices.forEach((v) => {
+        minX = Math.min(minX, v.x);
+        maxX = Math.max(maxX, v.x);
+        minY = Math.min(minY, v.y);
+        maxY = Math.max(maxY, v.y);
+      });
+    });
+    if (minX === 99999) { minX = -20; maxX = 20; minY = -20; maxY = 20; }
+    return {
+      cx: (minX + maxX) / 2,
+      cz: -(minY + maxY) / 2,
+      minX, maxX, minY, maxY,
+    };
+  }, [currentLevel]);
+
+  // Coordinate mapper from RMF map to Three.js (meters, X: right, Y: up, Z: toward viewer)
+  const mapToThreePos = useCallback((x: number, y: number): { x: number; z: number } => {
+    if (isMetric) {
+      return { x: x - originOffset.cx, z: -(y - (originOffset.minY + originOffset.maxY) / 2) };
+    }
+    // Pixel to meter scale
+    const scale = 0.05;
+    return { x: (x - 600) * scale, z: (y - 450) * scale };
+  }, [isMetric, originOffset]);
+
+  // Create text sprite helper for 3D holographic labels
+  const createTextSprite = (text: string, color: string = '#00F0FF', bgColor: string = 'rgba(7, 9, 14, 0.85)'): THREE.Sprite => {
+    const canvas = document.createElement('canvas');
+    canvas.width = 256;
+    canvas.height = 64;
+    const ctx = canvas.getContext('2d');
+    if (ctx) {
+      ctx.fillStyle = bgColor;
+      ctx.beginPath();
+      ctx.roundRect(8, 8, 240, 48, 8);
+      ctx.fill();
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 2;
+      ctx.stroke();
+
+      ctx.fillStyle = '#FFFFFF';
+      ctx.font = 'bold 20px "JetBrains Mono", Inter, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(text, 128, 32);
+    }
+
+    const texture = new THREE.CanvasTexture(canvas);
+    texture.minFilter = THREE.LinearFilter;
+    const spriteMaterial = new THREE.SpriteMaterial({ map: texture, transparent: true });
+    const sprite = new THREE.Sprite(spriteMaterial);
+    sprite.scale.set(1.8, 0.45, 1);
+    return sprite;
+  };
+
+  // Helper: Create high-detail procedural AGV robot 3D mesh
+  const createProceduralRobot = (robotName: string, fleetName: string): THREE.Group => {
+    const robotGroup = new THREE.Group();
+
+    // 1. Main Chassis (Matte Carbon / Dark Metal)
+    const chassisGeo = new THREE.BoxGeometry(0.7, 0.22, 0.55);
+    const chassisMat = new THREE.MeshStandardMaterial({
+      color: 0x1E293B,
+      metalness: 0.8,
+      roughness: 0.25,
+    });
+    const chassis = new THREE.Mesh(chassisGeo, chassisMat);
+    chassis.position.y = 0.16;
+    chassis.castShadow = true;
+    chassis.receiveShadow = true;
+    robotGroup.add(chassis);
+
+    // 2. Beveled Top Shell with Accent Trim
+    const topShellGeo = new THREE.BoxGeometry(0.58, 0.08, 0.46);
+    const topShellMat = new THREE.MeshStandardMaterial({
+      color: 0x0F172A,
+      metalness: 0.6,
+      roughness: 0.3,
+    });
+    const topShell = new THREE.Mesh(topShellGeo, topShellMat);
+    topShell.position.y = 0.28;
+    robotGroup.add(topShell);
+
+    // 3. Status LED Halo / Glow Band
+    const ledBandGeo = new THREE.BoxGeometry(0.72, 0.03, 0.57);
+    const ledBandMat = new THREE.MeshStandardMaterial({
+      color: 0x00F0FF,
+      emissive: 0x00F0FF,
+      emissiveIntensity: 0.8,
+    });
+    const ledBand = new THREE.Mesh(ledBandGeo, ledBandMat);
+    ledBand.position.y = 0.23;
+    robotGroup.add(ledBand);
+
+    // 4. LiDAR Sensor Dome on top
+    const lidarPillarGeo = new THREE.CylinderGeometry(0.04, 0.04, 0.08, 16);
+    const lidarPillarMat = new THREE.MeshStandardMaterial({ color: 0x334155, metalness: 0.9 });
+    const pillar = new THREE.Mesh(lidarPillarGeo, lidarPillarMat);
+    pillar.position.y = 0.36;
+    robotGroup.add(pillar);
+
+    const lidarHeadGeo = new THREE.CylinderGeometry(0.07, 0.07, 0.06, 16);
+    const lidarHeadMat = new THREE.MeshStandardMaterial({
+      color: 0x0284C7,
+      emissive: 0x00F0FF,
+      emissiveIntensity: 0.6,
+    });
+    const lidarHead = new THREE.Mesh(lidarHeadGeo, lidarHeadMat);
+    lidarHead.position.y = 0.41;
+    robotGroup.add(lidarHead);
+
+    // 5. Headlights
+    const lightGeo = new THREE.CylinderGeometry(0.03, 0.03, 0.02, 12);
+    const lightMat = new THREE.MeshBasicMaterial({ color: 0xE0F2FE });
+    const leftLight = new THREE.Mesh(lightGeo, lightMat);
+    leftLight.rotation.z = Math.PI / 2;
+    leftLight.position.set(0.355, 0.16, 0.16);
+    robotGroup.add(leftLight);
+
+    const rightLight = new THREE.Mesh(lightGeo, lightMat);
+    rightLight.rotation.z = Math.PI / 2;
+    rightLight.position.set(0.355, 0.16, -0.16);
+    robotGroup.add(rightLight);
+
+    // 6. Wheels (4 Omni/Drive Wheels)
+    const wheelGeo = new THREE.CylinderGeometry(0.09, 0.09, 0.06, 16);
+    const wheelMat = new THREE.MeshStandardMaterial({ color: 0x0A0E17, roughness: 0.9 });
+    const wheelPositions = [
+      [0.2, 0.09, 0.28],
+      [-0.2, 0.09, 0.28],
+      [0.2, 0.09, -0.28],
+      [-0.2, 0.09, -0.28],
+    ];
+    wheelPositions.forEach(([wx, wy, wz]) => {
+      const wheel = new THREE.Mesh(wheelGeo, wheelMat);
+      wheel.rotation.x = Math.PI / 2;
+      wheel.position.set(wx, wy, wz);
+      robotGroup.add(wheel);
+    });
+
+    // 7. Holographic Name & Telemetry Billboard
+    const nameSprite = createTextSprite(robotName, '#00F0FF');
+    nameSprite.position.set(0, 0.8, 0);
+    robotGroup.add(nameSprite);
+
+    // Tag data for animation & interaction
+    robotGroup.userData = { robotName, fleetName, lidar: lidarHead, statusLed: ledBand, nameSprite };
+
+    return robotGroup;
+  };
+
+  // Build 3D Map Environment (Walls, Waypoints, Lanes, Doors)
+  const rebuild3DMap = useCallback(() => {
+    const group = mapGroupRef.current;
+    // Clear previous map children
+    while (group.children.length > 0) {
+      const child = group.children[0];
+      group.remove(child);
+      if (child instanceof THREE.Mesh) {
+        child.geometry?.dispose();
+        if (Array.isArray(child.material)) {
+          child.material.forEach((m) => m.dispose());
+        } else {
+          child.material?.dispose();
+        }
+      }
+    }
+
+    if (!currentLevel) return;
+
+    // --- 1. Floor Ground Plane with High-Tech Grid ---
+    const floorGeo = new THREE.PlaneGeometry(120, 120);
+    const floorMat = new THREE.MeshStandardMaterial({
+      color: 0x080B12,
+      roughness: 0.8,
+      metalness: 0.2,
+    });
+    const floor = new THREE.Mesh(floorGeo, floorMat);
+    floor.rotation.x = -Math.PI / 2;
+    floor.position.y = -0.01;
+    floor.receiveShadow = true;
+    group.add(floor);
+
+    // Neon Cyber Grid
+    const grid = new THREE.GridHelper(120, 120, 0x00F0FF, 0x1E293B);
+    grid.position.y = 0;
+    const gridMat = grid.material as THREE.LineBasicMaterial;
+    gridMat.opacity = 0.25;
+    gridMat.transparent = true;
+    group.add(grid);
+
+    // --- 2. 3D Architectural Extruded Walls ---
+    if (showWalls && currentLevel.wall_segments) {
+      const wallMat = new THREE.MeshStandardMaterial({
+        color: 0x1E293B,
+        roughness: 0.35,
+        metalness: 0.65,
+      });
+      const wallEdgeMat = new THREE.LineBasicMaterial({
+        color: 0x38BDF8,
+        transparent: true,
+        opacity: 0.85,
+      });
+
+      const wallHeight = 2.4;
+      const wallThickness = 0.22;
+
+      currentLevel.wall_segments.forEach((w) => {
+        const p1 = mapToThreePos(w.x1, w.y1);
+        const p2 = mapToThreePos(w.x2, w.y2);
+
+        const dx = p2.x - p1.x;
+        const dz = p2.z - p1.z;
+        const length = Math.sqrt(dx * dx + dz * dz);
+        if (length < 0.05) return;
+
+        const wallGeo = new THREE.BoxGeometry(length, wallHeight, wallThickness);
+        const wallMesh = new THREE.Mesh(wallGeo, wallMat);
+        wallMesh.castShadow = true;
+        wallMesh.receiveShadow = true;
+
+        wallMesh.position.set((p1.x + p2.x) / 2, wallHeight / 2, (p1.z + p2.z) / 2);
+        wallMesh.rotation.y = -Math.atan2(dz, dx);
+        group.add(wallMesh);
+
+        // Neon glowing top edge
+        const edgesGeo = new THREE.EdgesGeometry(wallGeo);
+        const edgeLines = new THREE.LineSegments(edgesGeo, wallEdgeMat);
+        edgeLines.position.copy(wallMesh.position);
+        edgeLines.rotation.copy(wallMesh.rotation);
+        group.add(edgeLines);
+      });
+    }
+
+    // --- 3. Navigation Graph: Lanes & Waypoints ---
+    if (currentLevel.nav_graphs && currentLevel.nav_graphs.length > 0) {
+      const graph = currentLevel.nav_graphs[0];
+
+      // Waypoints
+      if (showWaypoints) {
+        const wpGeo = new THREE.CylinderGeometry(0.24, 0.24, 0.02, 16);
+        const wpMat = new THREE.MeshBasicMaterial({ color: 0x00F0FF, transparent: true, opacity: 0.75 });
+        const ringGeo = new THREE.RingGeometry(0.3, 0.36, 16);
+        const ringMat = new THREE.MeshBasicMaterial({ color: 0x38BDF8, side: THREE.DoubleSide });
+
+        graph.vertices.forEach((v) => {
+          const p = mapToThreePos(v.x, v.y);
+          const wpMesh = new THREE.Mesh(wpGeo, wpMat);
+          wpMesh.position.set(p.x, 0.015, p.z);
+          group.add(wpMesh);
+
+          const ringMesh = new THREE.Mesh(ringGeo, ringMat);
+          ringMesh.rotation.x = -Math.PI / 2;
+          ringMesh.position.set(p.x, 0.018, p.z);
+          group.add(ringMesh);
+
+          if (showLabels && v.name) {
+            const label = createTextSprite(v.name, '#38BDF8', 'rgba(15, 23, 42, 0.75)');
+            label.scale.set(1.2, 0.3, 1);
+            label.position.set(p.x, 0.35, p.z);
+            group.add(label);
+          }
+        });
+      }
+
+      // Lanes (Traffic Paths)
+      if (showLanes && graph.lanes) {
+        const lanePoints: THREE.Vector3[] = [];
+        graph.lanes.forEach((lane) => {
+          const v1 = graph.vertices[lane.entry];
+          const v2 = graph.vertices[lane.exit];
+          if (v1 && v2) {
+            const p1 = mapToThreePos(v1.x, v1.y);
+            const p2 = mapToThreePos(v2.x, v2.y);
+            lanePoints.push(new THREE.Vector3(p1.x, 0.02, p1.z));
+            lanePoints.push(new THREE.Vector3(p2.x, 0.02, p2.z));
+          }
+        });
+
+        if (lanePoints.length > 0) {
+          const laneGeo = new THREE.BufferGeometry().setFromPoints(lanePoints);
+          const laneMat = new THREE.LineBasicMaterial({
+            color: 0x00F0FF,
+            transparent: true,
+            opacity: 0.45,
+            linewidth: 2,
+          });
+          const laneLines = new THREE.LineSegments(laneGeo, laneMat);
+          group.add(laneLines);
+        }
+      }
+    }
+
+    // --- 4. Gazebo Office Environment (Exact 79 Models from office.building.yaml) ---
+    if (showDemoProps && Array.isArray(officeModelsData)) {
+      // Materials
+      const deskTopMat = new THREE.MeshStandardMaterial({ color: 0xF8FAFC, roughness: 0.25, metalness: 0.1 });
+      const deskLegMat = new THREE.MeshStandardMaterial({ color: 0x64748B, metalness: 0.8, roughness: 0.3 });
+      const blueDividerMat = new THREE.MeshStandardMaterial({ color: 0x2563EB, roughness: 0.7 });
+      const chairBlackMat = new THREE.MeshStandardMaterial({ color: 0x1E293B, roughness: 0.8 });
+      const chairBlueMat = new THREE.MeshStandardMaterial({ color: 0x1D4ED8, roughness: 0.8 });
+      const chairGreyMat = new THREE.MeshStandardMaterial({ color: 0x64748B, roughness: 0.8 });
+      const cabinetMat = new THREE.MeshStandardMaterial({ color: 0xE2E8F0, roughness: 0.4, metalness: 0.2 });
+      const metalCabinetMat = new THREE.MeshStandardMaterial({ color: 0x475569, roughness: 0.3, metalness: 0.7 });
+      const yellowCabinetMat = new THREE.MeshStandardMaterial({ color: 0xEAB308, roughness: 0.4, metalness: 0.3 });
+      const fridgeMat = new THREE.MeshStandardMaterial({ color: 0xCBD5E1, roughness: 0.2, metalness: 0.6 });
+      const woodMat = new THREE.MeshStandardMaterial({ color: 0x785338, roughness: 0.6 });
+      const screenMat = new THREE.MeshStandardMaterial({ color: 0x0F172A, metalness: 0.5 });
+      const dispenserMat = new THREE.MeshStandardMaterial({ color: 0x0284C7, emissive: 0x00F0FF, emissiveIntensity: 0.4 });
+
+      // Chair builder helper
+      const buildChair = (mat: THREE.Material) => {
+        const chair = new THREE.Group();
+        const seat = new THREE.Mesh(new THREE.BoxGeometry(0.42, 0.05, 0.42), mat);
+        seat.position.y = 0.45;
+        chair.add(seat);
+
+        const back = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.45, 0.05), mat);
+        back.position.set(0, 0.7, -0.2);
+        chair.add(back);
+
+        const stem = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, 0.4, 8), deskLegMat);
+        stem.position.y = 0.2;
+        chair.add(stem);
+
+        const base = new THREE.Mesh(new THREE.CylinderGeometry(0.24, 0.24, 0.03, 8), mat);
+        base.position.y = 0.03;
+        chair.add(base);
+        return chair;
+      };
+
+      // Table builder helper
+      const buildAdjTable = () => {
+        const table = new THREE.Group();
+        const top = new THREE.Mesh(new THREE.BoxGeometry(1.5, 0.04, 0.8), deskTopMat);
+        top.position.y = 0.74;
+        top.castShadow = true;
+        top.receiveShadow = true;
+        table.add(top);
+
+        [[-0.65, -0.3], [0.65, -0.3], [-0.65, 0.3], [0.65, 0.3]].forEach(([lx, lz]) => {
+          const leg = new THREE.Mesh(new THREE.CylinderGeometry(0.025, 0.025, 0.74, 8), deskLegMat);
+          leg.position.set(lx, 0.37, lz);
+          table.add(leg);
+        });
+
+        // Blue privacy divider on rear
+        const divider = new THREE.Mesh(new THREE.BoxGeometry(1.5, 0.45, 0.04), blueDividerMat);
+        divider.position.set(0, 0.95, -0.38);
+        table.add(divider);
+
+        // Screen
+        const screen = new THREE.Mesh(new THREE.BoxGeometry(0.48, 0.28, 0.02), screenMat);
+        screen.position.set(0, 0.92, -0.2);
+        table.add(screen);
+        return table;
+      };
+
+      // Cubicle builder helper
+      const buildCubicle = (isBig: boolean) => {
+        const cubicle = new THREE.Group();
+        const w = isBig ? 1.8 : 1.4;
+        const d = isBig ? 1.4 : 1.1;
+        const h = isBig ? 1.4 : 1.2;
+
+        // Back acoustic wall
+        const back = new THREE.Mesh(new THREE.BoxGeometry(w, h, 0.04), blueDividerMat);
+        back.position.set(0, h / 2, -d / 2);
+        cubicle.add(back);
+
+        // Side walls
+        const side1 = new THREE.Mesh(new THREE.BoxGeometry(0.04, h, d), blueDividerMat);
+        side1.position.set(-w / 2, h / 2, 0);
+        cubicle.add(side1);
+
+        const side2 = new THREE.Mesh(new THREE.BoxGeometry(0.04, h, d), blueDividerMat);
+        side2.position.set(w / 2, h / 2, 0);
+        cubicle.add(side2);
+
+        // Desk inside
+        const desk = new THREE.Mesh(new THREE.BoxGeometry(w - 0.08, 0.04, d * 0.7), deskTopMat);
+        desk.position.set(0, 0.74, -d * 0.15);
+        cubicle.add(desk);
+
+        const screen = new THREE.Mesh(new THREE.BoxGeometry(0.48, 0.28, 0.02), screenMat);
+        screen.position.set(0, 0.92, -d * 0.35);
+        cubicle.add(screen);
+        return cubicle;
+      };
+
+      // Iterate and instantiate all 79 Gazebo models with millimeter precision
+      (officeModelsData as any[]).forEach((m) => {
+        const p = mapToThreePos(m.mx, m.my);
+        const modelName = m.model_name || '';
+        let meshObj: THREE.Group | THREE.Mesh | null = null;
+
+        if (modelName.includes('AdjTable')) {
+          meshObj = buildAdjTable();
+        } else if (modelName.includes('SmallCubicle')) {
+          meshObj = buildCubicle(false);
+        } else if (modelName.includes('BigCubicle')) {
+          meshObj = buildCubicle(true);
+        } else if (modelName.includes('OfficeChairBlack')) {
+          meshObj = buildChair(chairBlackMat);
+        } else if (modelName.includes('OfficeChairBlue')) {
+          meshObj = buildChair(chairBlueMat);
+        } else if (modelName.includes('OfficeChairGrey')) {
+          meshObj = buildChair(chairGreyMat);
+        } else if (modelName.includes('ConfTable')) {
+          meshObj = new THREE.Mesh(new THREE.BoxGeometry(2.8, 0.06, 1.2), deskTopMat);
+          meshObj.position.y = 0.74;
+        } else if (modelName.includes('Fridge')) {
+          meshObj = new THREE.Mesh(new THREE.BoxGeometry(0.85, 1.8, 0.7), fridgeMat);
+          meshObj.position.y = 0.9;
+        } else if (modelName.includes('MetalCabinetYellow')) {
+          meshObj = new THREE.Mesh(new THREE.BoxGeometry(0.9, 1.4, 0.45), yellowCabinetMat);
+          meshObj.position.y = 0.7;
+        } else if (modelName.includes('MetalCabinet')) {
+          meshObj = new THREE.Mesh(new THREE.BoxGeometry(0.9, 1.4, 0.45), metalCabinetMat);
+          meshObj.position.y = 0.7;
+        } else if (modelName.includes('WhiteCabinet')) {
+          meshObj = new THREE.Mesh(new THREE.BoxGeometry(0.9, 1.4, 0.45), cabinetMat);
+          meshObj.position.y = 0.7;
+        } else if (modelName.includes('Drawer')) {
+          meshObj = new THREE.Mesh(new THREE.BoxGeometry(0.45, 0.55, 0.5), cabinetMat);
+          meshObj.position.y = 0.28;
+        } else if (modelName.includes('CoffeeTable')) {
+          meshObj = new THREE.Mesh(new THREE.BoxGeometry(1.1, 0.38, 0.6), woodMat);
+          meshObj.position.y = 0.19;
+        } else if (modelName.includes('SquareShelf')) {
+          meshObj = new THREE.Mesh(new THREE.BoxGeometry(0.8, 1.5, 0.4), woodMat);
+          meshObj.position.y = 0.75;
+        } else if (modelName.includes('TrashBin')) {
+          meshObj = new THREE.Mesh(new THREE.CylinderGeometry(0.14, 0.12, 0.38, 12), chairBlackMat);
+          meshObj.position.y = 0.19;
+        } else if (modelName.includes('TeleportDispenser') || modelName.includes('TeleportIngestor')) {
+          meshObj = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.7, 0.4), dispenserMat);
+          meshObj.position.y = 0.35;
+        }
+
+        if (meshObj) {
+          meshObj.position.set(p.x, meshObj.position.y || 0, p.z);
+          meshObj.rotation.y = m.yaw || 0;
+          group.add(meshObj);
+        }
+      });
+    }
+
+    // --- 5. Interactive 3D Doors ---
+    if (currentLevel.doors) {
+      currentLevel.doors.forEach((door) => {
+        const dAny = door as any;
+        const x1 = dAny.x1 ?? (door.x !== undefined ? door.x - 0.6 : 0);
+        const y1 = dAny.y1 ?? (door.y !== undefined ? door.y : 0);
+        const x2 = dAny.x2 ?? (door.x !== undefined ? door.x + 0.6 : 0);
+        const y2 = dAny.y2 ?? (door.y !== undefined ? door.y : 0);
+
+        const p1 = mapToThreePos(x1, y1);
+        const p2 = mapToThreePos(x2, y2);
+        const length = Math.sqrt((p2.x - p1.x) ** 2 + (p2.z - p1.z) ** 2);
+        if (length < 0.1) return;
+
+        const isOpen = doorStates[door.name]?.current_mode?.value === 2; // 2 = open
+        const doorGeo = new THREE.BoxGeometry(length * (isOpen ? 0.15 : 0.95), 2.2, 0.08);
+        const doorMat = new THREE.MeshStandardMaterial({
+          color: isOpen ? 0x10B981 : 0xEF4444,
+          transparent: true,
+          opacity: 0.8,
+        });
+        const doorMesh = new THREE.Mesh(doorGeo, doorMat);
+        doorMesh.position.set((p1.x + p2.x) / 2, 1.1, (p1.z + p2.z) / 2);
+        doorMesh.rotation.y = -Math.atan2(p2.z - p1.z, p2.x - p1.x);
+        group.add(doorMesh);
+      });
+    }
+  }, [currentLevel, mapToThreePos, showWalls, showWaypoints, showLanes, showLabels, showDemoProps, doorStates]);
+
+  // Main Three.js Scene Initialization
+  useEffect(() => {
+    const container = mountRef.current;
+    if (!container) return;
+
+    // Scene
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x07090E);
+    scene.fog = new THREE.FogExp2(0x07090E, 0.015);
+    sceneRef.current = scene;
+
+    // Camera
+    const camera = new THREE.PerspectiveCamera(
+      45,
+      container.clientWidth / container.clientHeight,
+      0.1,
+      500,
+    );
+    camera.position.set(18, 22, 24);
+    cameraRef.current = camera;
+
+    // Renderer
+    const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
+    renderer.setSize(container.clientWidth, container.clientHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    rendererRef.current = renderer;
+    container.appendChild(renderer.domElement);
+
+    // Orbit Controls
+    const controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.06;
+    controls.maxPolarAngle = Math.PI / 2.05; // Do not go below floor
+    controls.minDistance = 3;
+    controls.maxDistance = 150;
+    controls.target.set(0, 0, 0);
+    controlsRef.current = controls;
+
+    // Lights
+    const ambientLight = new THREE.AmbientLight(0xFFFFFF, 0.8);
+    scene.add(ambientLight);
+
+    const dirLight = new THREE.DirectionalLight(0xE0F2FE, 1.4);
+    dirLight.position.set(25, 40, 20);
+    dirLight.castShadow = true;
+    dirLight.shadow.mapSize.width = 2048;
+    dirLight.shadow.mapSize.height = 2048;
+    dirLight.shadow.camera.near = 10;
+    dirLight.shadow.camera.far = 100;
+    dirLight.shadow.camera.left = -40;
+    dirLight.shadow.camera.right = 40;
+    dirLight.shadow.camera.top = 40;
+    dirLight.shadow.camera.bottom = -40;
+    scene.add(dirLight);
+
+    const blueRimLight = new THREE.DirectionalLight(0x00F0FF, 0.6);
+    blueRimLight.position.set(-30, 20, -30);
+    scene.add(blueRimLight);
+
+    // Add Groups to Scene
+    scene.add(mapGroupRef.current);
+    scene.add(robotsGroupRef.current);
+
+    // Resize Handler
+    const handleResize = () => {
+      if (!container || !renderer || !camera) return;
+      camera.aspect = container.clientWidth / container.clientHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(container.clientWidth, container.clientHeight);
+    };
+    window.addEventListener('resize', handleResize);
+
+    // Animation Loop
+    let animationFrameId: number;
+    let lastTime = performance.now();
+    let frameCount = 0;
+    let lastFpsUpdate = performance.now();
+
+    const animate = () => {
+      animationFrameId = requestAnimationFrame(animate);
+
+      const now = performance.now();
+      const delta = (now - lastTime) / 1000;
+      lastTime = now;
+
+      // FPS tracking
+      frameCount++;
+      if (now - lastFpsUpdate > 1000) {
+        setFps(Math.round((frameCount * 1000) / (now - lastFpsUpdate)));
+        frameCount = 0;
+        lastFpsUpdate = now;
+      }
+
+      // Smoothly interpolate robots position and rotate LiDAR sensor
+      robotObjectsRef.current.forEach((robotObj) => {
+        // Position lerp
+        robotObj.group.position.lerp(robotObj.targetPos, 0.08);
+
+        // Rotation lerp
+        let diff = robotObj.targetRotY - robotObj.group.rotation.y;
+        while (diff < -Math.PI) diff += Math.PI * 2;
+        while (diff > Math.PI) diff -= Math.PI * 2;
+        robotObj.group.rotation.y += diff * 0.1;
+
+        // Spin LiDAR scanner
+        if (robotObj.lidar) {
+          robotObj.lidar.rotation.y += delta * 12;
+        }
+      });
+
+      // Camera Follow active robot
+      if (followingRobotName) {
+        const followedRobot = robotObjectsRef.current.get(followingRobotName);
+        if (followedRobot && controls) {
+          const rPos = followedRobot.group.position;
+          controls.target.lerp(new THREE.Vector3(rPos.x, 0.3, rPos.z), 0.08);
+        }
+      }
+
+      controls.update();
+      renderer.render(scene, camera);
+    };
+
+    animate();
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      cancelAnimationFrame(animationFrameId);
+      controls.dispose();
+      renderer.dispose();
+      if (container.contains(renderer.domElement)) {
+        container.removeChild(renderer.domElement);
+      }
+    };
+  }, []);
+
+  // Update Map geometry whenever floor or layer visibility toggles
+  useEffect(() => {
+    rebuild3DMap();
+  }, [rebuild3DMap]);
+
+  // Synchronize Live Robots from `fleets` Context
+  useEffect(() => {
+    const robotsGroup = robotsGroupRef.current;
+    const currentRobotMap = robotObjectsRef.current;
+    const activeRobotNames = new Set<string>();
+
+    const robotsOnFloor = fleets
+      .flatMap((f) => f.robots.map((r) => ({ robot: r, fleet: f.name })))
+      .filter(({ robot }) => !robot.location.level_name || robot.location.level_name === selectedFloor);
+
+    robotsOnFloor.forEach(({ robot, fleet }) => {
+      activeRobotNames.add(robot.name);
+      const pos = mapToThreePos(robot.location.x, robot.location.y);
+      const targetVec = new THREE.Vector3(pos.x, 0, pos.z);
+      const targetYaw = robot.location.yaw || 0;
+
+      let robotEntry = currentRobotMap.get(robot.name);
+
+      if (!robotEntry) {
+        // Create new 3D Robot mesh
+        let meshGroup: THREE.Group;
+        if (customGltfModelRef.current) {
+          meshGroup = customGltfModelRef.current.clone();
+        } else {
+          meshGroup = createProceduralRobot(robot.name, fleet);
+        }
+
+        meshGroup.position.copy(targetVec);
+        meshGroup.rotation.y = targetYaw;
+        robotsGroup.add(meshGroup);
+
+        const lidar = meshGroup.userData.lidar || new THREE.Mesh();
+        const statusLed = meshGroup.userData.statusLed || new THREE.Mesh();
+        const nameSprite = meshGroup.userData.nameSprite || createTextSprite(robot.name);
+
+        robotEntry = {
+          group: meshGroup,
+          targetPos: targetVec,
+          targetRotY: targetYaw,
+          lidar,
+          statusLed,
+          nameSprite,
+        };
+        currentRobotMap.set(robot.name, robotEntry);
+      } else {
+        // Update targets
+        robotEntry.targetPos.copy(targetVec);
+        robotEntry.targetRotY = targetYaw;
+
+        // Update LED color according to battery and status
+        const isSelected = selectedRobot?.name === robot.name;
+        const ledMat = robotEntry.statusLed.material as THREE.MeshStandardMaterial;
+        if (ledMat) {
+          if (isSelected) {
+            ledMat.color.setHex(0xA855F7); // Purple for selected
+            ledMat.emissive.setHex(0xA855F7);
+          } else if (robot.battery < 0.25) {
+            ledMat.color.setHex(0xEF4444); // Red warning
+            ledMat.emissive.setHex(0xEF4444);
+          } else if (robot.mode === 'charging') {
+            ledMat.color.setHex(0xF59E0B); // Amber
+            ledMat.emissive.setHex(0xF59E0B);
+          } else {
+            ledMat.color.setHex(0x00F0FF); // Cyan
+            ledMat.emissive.setHex(0x00F0FF);
+          }
+        }
+      }
+    });
+
+    // Remove robots no longer on floor
+    currentRobotMap.forEach((entry, name) => {
+      if (!activeRobotNames.has(name)) {
+        robotsGroup.remove(entry.group);
+        currentRobotMap.delete(name);
+      }
+    });
+  }, [fleets, selectedFloor, mapToThreePos, selectedRobot]);
+
+  // Raycasting for clicking on robots in 3D
+  const handleCanvasClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!mountRef.current || !cameraRef.current || !sceneRef.current) return;
+    const rect = mountRef.current.getBoundingClientRect();
+    const mouse = new THREE.Vector2(
+      ((e.clientX - rect.left) / rect.width) * 2 - 1,
+      -((e.clientY - rect.top) / rect.height) * 2 + 1,
+    );
+
+    const raycaster = new THREE.Raycaster();
+    raycaster.setFromCamera(mouse, cameraRef.current);
+    const intersects = raycaster.intersectObjects(robotsGroupRef.current.children, true);
+
+    if (intersects.length > 0) {
+      let topObj: THREE.Object3D | null = intersects[0].object;
+      while (topObj && !topObj.userData?.robotName && topObj.parent) {
+        topObj = topObj.parent;
+      }
+      if (topObj && topObj.userData?.robotName) {
+        const rName = topObj.userData.robotName;
+        const found = fleets.flatMap((f) => f.robots).find((r) => r.name === rName);
+        if (found) {
+          setSelectedRobot(found);
+          if (onSelectRobot) onSelectRobot(found);
+          setFollowingRobotName(rName);
+        }
+      }
+    }
+  };
+
+  // Switch camera views
+  const applyCameraPreset = (preset: 'iso' | 'top' | 'front') => {
+    setCameraPreset(preset);
+    const camera = cameraRef.current;
+    const controls = controlsRef.current;
+    if (!camera || !controls) return;
+
+    if (preset === 'top') {
+      camera.position.set(0, 36, 0.001);
+      controls.target.set(0, 0, 0);
+    } else if (preset === 'front') {
+      camera.position.set(0, 8, 28);
+      controls.target.set(0, 0, 0);
+    } else {
+      // Isometric view
+      camera.position.set(18, 22, 24);
+      controls.target.set(0, 0, 0);
+    }
+    controls.update();
+  };
+
+  // Reset Camera View
+  const resetCamera = () => {
+    setFollowingRobotName(null);
+    applyCameraPreset('iso');
+  };
+
+  // Load Custom Demo 3D Model (.gltf / .glb)
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setCustomModelName(file.name);
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const contents = event.target?.result as ArrayBuffer;
+      const loader = new GLTFLoader();
+      loader.parse(
+        contents,
+        '',
+        (gltf) => {
+          // Normalize model scale
+          const box = new THREE.Box3().setFromObject(gltf.scene);
+          const size = new THREE.Vector3();
+          box.getSize(size);
+          const maxDim = Math.max(size.x, size.y, size.z);
+          const scaleFactor = 0.8 / (maxDim || 1);
+          gltf.scene.scale.set(scaleFactor, scaleFactor, scaleFactor);
+          gltf.scene.traverse((node) => {
+            if ((node as THREE.Mesh).isMesh) {
+              node.castShadow = true;
+              node.receiveShadow = true;
+            }
+          });
+
+          customGltfModelRef.current = gltf.scene;
+
+          // Rebuild current robots with new model
+          const currentMap = robotObjectsRef.current;
+          robotsGroupRef.current.clear();
+          currentMap.clear();
+        },
+        (error) => {
+          console.error('Error parsing GLTF file:', error);
+          alert('Failed to parse 3D GLTF/GLB file. Please ensure it is a valid format.');
+        },
+      );
+    };
+    reader.readAsArrayBuffer(file);
+  };
+
+  return (
+    <div
+      style={{
+        position: 'relative',
+        width: '100%',
+        height: '100%',
+        overflow: 'hidden',
+        background: '#07090E',
+      }}
+    >
+      {/* Three.js Canvas Container */}
+      <div
+        ref={mountRef}
+        onClick={handleCanvasClick}
+        style={{
+          width: '100%',
+          height: '100%',
+          cursor: 'grab',
+        }}
+      />
+
+      {/* Top Left HUD: Floor & Telemetry info */}
+      <div
+        style={{
+          position: 'absolute',
+          top: '16px',
+          left: '16px',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '8px',
+          background: 'rgba(10, 14, 22, 0.88)',
+          backdropFilter: 'blur(12px)',
+          padding: '6px 12px',
+          borderRadius: '10px',
+          border: '1px solid var(--border-subtle)',
+          zIndex: 10,
+          boxShadow: '0 4px 20px rgba(0, 0, 0, 0.5)',
+        }}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+          <Box size={16} color="var(--accent-cyan)" />
+          <span style={{ fontSize: '12px', fontWeight: 700, color: '#FFFFFF', letterSpacing: '0.5px' }}>
+            DIGITAL TWIN 3D (THREE.JS / WEBGL)
+          </span>
+        </div>
+
+        <div style={{ width: '1px', height: '14px', background: 'var(--border-subtle)' }} />
+
+        {/* Floor Level Selector */}
+        <div style={{ display: 'flex', gap: '4px' }}>
+          {buildingMap.levels.map((lvl) => {
+            const isActive = lvl.name === selectedFloor;
+            return (
+              <button
+                key={lvl.name}
+                onClick={() => {
+                  setSelectedFloor(lvl.name);
+                  setFollowingRobotName(null);
+                }}
+                style={{
+                  padding: '3px 10px',
+                  borderRadius: '6px',
+                  fontSize: '11px',
+                  fontWeight: 600,
+                  border: 'none',
+                  cursor: 'pointer',
+                  background: isActive ? 'var(--accent-cyan)' : 'transparent',
+                  color: isActive ? '#07090E' : 'var(--text-secondary)',
+                  transition: 'all 0.2s',
+                }}
+              >
+                {lvl.name}
+              </button>
+            );
+          })}
+        </div>
+
+        <div style={{ width: '1px', height: '14px', background: 'var(--border-subtle)' }} />
+
+        <span style={{ fontSize: '11px', color: 'var(--accent-emerald)', fontFamily: 'var(--font-mono)' }}>
+          {fps} FPS
+        </span>
+      </div>
+
+      {/* Top Center: Lock/Follow indicator */}
+      {followingRobotName && (
+        <div
+          style={{
+            position: 'absolute',
+            top: '16px',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            background: 'rgba(0, 240, 255, 0.15)',
+            border: '1px solid var(--accent-cyan)',
+            backdropFilter: 'blur(8px)',
+            padding: '6px 14px',
+            borderRadius: '20px',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            fontSize: '12px',
+            fontWeight: 600,
+            color: 'var(--accent-cyan)',
+            zIndex: 10,
+          }}
+        >
+          <Navigation size={14} />
+          <span>Tracking: {followingRobotName}</span>
+          <button
+            onClick={() => setFollowingRobotName(null)}
+            style={{
+              background: 'transparent',
+              border: 'none',
+              color: '#FFFFFF',
+              cursor: 'pointer',
+              fontSize: '11px',
+              textDecoration: 'underline',
+              marginLeft: '4px',
+            }}
+          >
+            Unlock
+          </button>
+        </div>
+      )}
+
+      {/* Right Toolbar: Camera Views & Quick Layer Toggles */}
+      <div
+        style={{
+          position: 'absolute',
+          top: '64px',
+          right: '16px',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '8px',
+          zIndex: 10,
+        }}
+      >
+        {/* Camera Views Preset */}
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            background: 'rgba(10, 14, 22, 0.88)',
+            backdropFilter: 'blur(12px)',
+            borderRadius: '10px',
+            border: '1px solid var(--border-subtle)',
+            overflow: 'hidden',
+          }}
+        >
+          <button
+            onClick={() => applyCameraPreset('iso')}
+            className="btn btn-secondary"
+            title="Isometric 3D View"
+            style={{
+              padding: '9px 12px',
+              border: 'none',
+              borderRadius: 0,
+              fontSize: '11px',
+              fontWeight: 600,
+              color: cameraPreset === 'iso' ? 'var(--accent-cyan)' : 'var(--text-secondary)',
+              background: cameraPreset === 'iso' ? 'rgba(0, 240, 255, 0.15)' : 'transparent',
+            }}
+          >
+            ISO 45°
+          </button>
+          <div style={{ height: '1px', background: 'var(--border-subtle)' }} />
+          <button
+            onClick={() => applyCameraPreset('top')}
+            className="btn btn-secondary"
+            title="Top-Down Plan View"
+            style={{
+              padding: '9px 12px',
+              border: 'none',
+              borderRadius: 0,
+              fontSize: '11px',
+              fontWeight: 600,
+              color: cameraPreset === 'top' ? 'var(--accent-cyan)' : 'var(--text-secondary)',
+              background: cameraPreset === 'top' ? 'rgba(0, 240, 255, 0.15)' : 'transparent',
+            }}
+          >
+            TOP 2D
+          </button>
+          <div style={{ height: '1px', background: 'var(--border-subtle)' }} />
+          <button
+            onClick={resetCamera}
+            className="btn btn-secondary"
+            title="Reset Camera Center"
+            style={{
+              padding: '9px 12px',
+              border: 'none',
+              borderRadius: 0,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <RotateCcw size={14} />
+          </button>
+        </div>
+
+        {/* 3D Model & Layer Settings Button */}
+        <button
+          onClick={() => setShowSettingsDrawer(!showSettingsDrawer)}
+          className="btn btn-secondary"
+          style={{
+            padding: '10px',
+            borderRadius: '10px',
+            background: showSettingsDrawer ? 'rgba(0, 240, 255, 0.2)' : 'rgba(10, 14, 22, 0.88)',
+            borderColor: showSettingsDrawer ? 'var(--accent-cyan)' : 'var(--border-subtle)',
+          }}
+          title="3D Model & Visual Layers Settings"
+        >
+          <Sliders size={16} />
+        </button>
+      </div>
+
+      {/* 3D Settings Drawer / Modal */}
+      {showSettingsDrawer && (
+        <div
+          style={{
+            position: 'absolute',
+            top: '64px',
+            right: '68px',
+            width: '280px',
+            background: 'rgba(13, 18, 29, 0.95)',
+            backdropFilter: 'blur(16px)',
+            border: '1px solid var(--border-subtle)',
+            borderRadius: '12px',
+            padding: '16px',
+            zIndex: 25,
+            boxShadow: '0 8px 32px rgba(0, 0, 0, 0.6)',
+            fontSize: '12px',
+          }}
+        >
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
+            <span style={{ fontWeight: 700, color: '#FFFFFF', fontSize: '13px' }}>
+              3D DIGITAL TWIN OPTIONS
+            </span>
+            <button
+              onClick={() => setShowSettingsDrawer(false)}
+              style={{ background: 'transparent', border: 'none', color: 'var(--text-muted)', cursor: 'pointer' }}
+            >
+              ✕
+            </button>
+          </div>
+
+          {/* Custom 3D Model Upload (.glb / .gltf) */}
+          <div style={{ marginBottom: '16px' }}>
+            <span style={{ display: 'block', fontSize: '11px', fontWeight: 600, color: 'var(--text-muted)', marginBottom: '6px' }}>
+              CUSTOM 3D ROBOT MODEL (GLTF / GLB)
+            </span>
+            <input
+              type="file"
+              ref={fileInputRef}
+              accept=".gltf,.glb"
+              onChange={handleFileUpload}
+              style={{ display: 'none' }}
+            />
+            <button
+              onClick={() => fileInputRef.current?.click()}
+              className="btn btn-secondary"
+              style={{ width: '100%', justifyContent: 'center', gap: '6px', padding: '8px' }}
+            >
+              <Upload size={14} />
+              <span>{customModelName ? `Loaded: ${customModelName}` : 'Load .GLTF / .GLB File'}</span>
+            </button>
+            {customModelName && (
+              <button
+                onClick={() => {
+                  setCustomModelName(null);
+                  customGltfModelRef.current = null;
+                  robotObjectsRef.current.clear();
+                  robotsGroupRef.current.clear();
+                }}
+                style={{
+                  background: 'transparent',
+                  border: 'none',
+                  color: 'var(--accent-amber)',
+                  fontSize: '10px',
+                  cursor: 'pointer',
+                  marginTop: '4px',
+                  display: 'block',
+                }}
+              >
+                Reset to Procedural AGV Model
+              </button>
+            )}
+          </div>
+
+          {/* Visual Layer Toggles */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            <span style={{ fontSize: '11px', fontWeight: 600, color: 'var(--text-muted)' }}>
+              3D SCENE LAYERS
+            </span>
+
+            {[
+              { label: '3D Extruded Walls', state: showWalls, toggle: () => setShowWalls(!showWalls) },
+              { label: 'Navigation Lanes', state: showLanes, toggle: () => setShowLanes(!showLanes) },
+              { label: 'Waypoints & Stations', state: showWaypoints, toggle: () => setShowWaypoints(!showWaypoints) },
+              { label: 'Holographic Labels', state: showLabels, toggle: () => setShowLabels(!showLabels) },
+              { label: 'Demo Warehouse Props', state: showDemoProps, toggle: () => setShowDemoProps(!showDemoProps) },
+            ].map(({ label, state, toggle }) => (
+              <label
+                key={label}
+                onClick={toggle}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  padding: '6px 8px',
+                  background: 'var(--bg-surface-elevated)',
+                  borderRadius: '6px',
+                  cursor: 'pointer',
+                  color: state ? '#FFFFFF' : 'var(--text-muted)',
+                }}
+              >
+                <span>{label}</span>
+                <span
+                  style={{
+                    width: '16px',
+                    height: '16px',
+                    borderRadius: '4px',
+                    border: '1px solid var(--border-subtle)',
+                    background: state ? 'var(--accent-cyan)' : 'transparent',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                >
+                  {state && <Check size={12} color="#07090E" />}
+                </span>
+              </label>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
