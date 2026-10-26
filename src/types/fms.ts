@@ -1,12 +1,12 @@
 // FMS App UI & Configuration Types
 
-export type NavigationTab = 
-  | 'overview' 
-  | 'map' 
-  | 'fleets' 
-  | 'tasks' 
-  | 'infrastructure' 
-  | 'alerts' 
+export type NavigationTab =
+  | 'overview'
+  | 'map'
+  | 'fleets'
+  | 'tasks'
+  | 'infrastructure'
+  | 'alerts'
   | 'settings';
 
 export interface FmsSettings {

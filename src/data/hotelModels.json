@@ -1,0 +1,1577 @@
+[
+  {
+    "name": "OpenRobotics/NurseDesk",
+    "model_name": "OpenRobotics/NurseDesk",
+    "level_name": "L1",
+    "x": 19.797,
+    "y": -28.144,
+    "z": 0,
+    "yaw": 0
+  },
+  {
+    "name": "OpenRobotics/Sofa",
+    "model_name": "OpenRobotics/Sofa",
+    "level_name": "L1",
+    "x": 7.864,
+    "y": -26.878,
+    "z": 0,
+    "yaw": 0.007
+  },
+  {
+    "name": "OpenRobotics/Sofa",
+    "model_name": "OpenRobotics/Sofa",
+    "level_name": "L1",
+    "x": 9.713,
+    "y": -28.758,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/Cafe table",
+    "model_name": "OpenRobotics/Cafe table",
+    "level_name": "L1",
+    "x": 9.729,
+    "y": -26.799,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/HeadphonesRack1",
+    "model_name": "OpenRobotics/HeadphonesRack1",
+    "level_name": "L1",
+    "x": 9.599,
+    "y": -31.496,
+    "z": 0,
+    "yaw": 0.89
+  },
+  {
+    "name": "OpenRobotics/Bookshelf",
+    "model_name": "OpenRobotics/Bookshelf",
+    "level_name": "L1",
+    "x": 7.746,
+    "y": -35.655,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/Bookshelf",
+    "model_name": "OpenRobotics/Bookshelf",
+    "level_name": "L1",
+    "x": 7.726,
+    "y": -34.629,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/Bookshelf",
+    "model_name": "OpenRobotics/Bookshelf",
+    "level_name": "L1",
+    "x": 7.736,
+    "y": -33.583,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/Bookshelf",
+    "model_name": "OpenRobotics/Bookshelf",
+    "level_name": "L1",
+    "x": 5.567,
+    "y": -35.694,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/Bookshelf",
+    "model_name": "OpenRobotics/Bookshelf",
+    "level_name": "L1",
+    "x": 5.567,
+    "y": -34.658,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/Bookshelf",
+    "model_name": "OpenRobotics/Bookshelf",
+    "level_name": "L1",
+    "x": 5.567,
+    "y": -33.622,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/FoodCourtTable1",
+    "model_name": "OpenRobotics/FoodCourtTable1",
+    "level_name": "L1",
+    "x": 12.301,
+    "y": -9.172,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/FoodCourtTable1",
+    "model_name": "OpenRobotics/FoodCourtTable1",
+    "level_name": "L1",
+    "x": 10.35,
+    "y": -9.212,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/FoodCourtTable1",
+    "model_name": "OpenRobotics/FoodCourtTable1",
+    "level_name": "L1",
+    "x": 10.38,
+    "y": -11.529,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/FoodCourtTable1",
+    "model_name": "OpenRobotics/FoodCourtTable1",
+    "level_name": "L1",
+    "x": 8.376,
+    "y": -14.037,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/FoodCourtBenchShort",
+    "model_name": "OpenRobotics/FoodCourtBenchShort",
+    "level_name": "L1",
+    "x": 10.388,
+    "y": -12.222,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/FoodCourtBenchShort",
+    "model_name": "OpenRobotics/FoodCourtBenchShort",
+    "level_name": "L1",
+    "x": 10.443,
+    "y": -9.948,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/FoodCourtBenchShort",
+    "model_name": "OpenRobotics/FoodCourtBenchShort",
+    "level_name": "L1",
+    "x": 12.301,
+    "y": -8.434,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/FoodCourtBenchShort",
+    "model_name": "OpenRobotics/FoodCourtBenchShort",
+    "level_name": "L1",
+    "x": 8.398,
+    "y": -14.704,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/FoodCourtBenchShort",
+    "model_name": "OpenRobotics/FoodCourtBenchShort",
+    "level_name": "L1",
+    "x": 10.366,
+    "y": -10.877,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/FoodCourtBenchShort",
+    "model_name": "OpenRobotics/FoodCourtBenchShort",
+    "level_name": "L1",
+    "x": 10.411,
+    "y": -8.434,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/FoodCourtBenchShort",
+    "model_name": "OpenRobotics/FoodCourtBenchShort",
+    "level_name": "L1",
+    "x": 8.365,
+    "y": -13.436,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/FoodCourtBenchShort",
+    "model_name": "OpenRobotics/FoodCourtBenchShort",
+    "level_name": "L1",
+    "x": 8.429,
+    "y": -12.276,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/FoodCourtBenchShort",
+    "model_name": "OpenRobotics/FoodCourtBenchShort",
+    "level_name": "L1",
+    "x": 8.429,
+    "y": -10.904,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/FoodCourtBenchShort",
+    "model_name": "OpenRobotics/FoodCourtBenchShort",
+    "level_name": "L1",
+    "x": 8.383,
+    "y": -9.882,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/FoodCourtBenchShort",
+    "model_name": "OpenRobotics/FoodCourtBenchShort",
+    "level_name": "L1",
+    "x": 8.368,
+    "y": -8.465,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/FoodCourtTable1",
+    "model_name": "OpenRobotics/FoodCourtTable1",
+    "level_name": "L1",
+    "x": 8.46,
+    "y": -11.59,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/FoodCourtTable1",
+    "model_name": "OpenRobotics/FoodCourtTable1",
+    "level_name": "L1",
+    "x": 8.408,
+    "y": -9.14,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/MainTable",
+    "model_name": "OpenRobotics/MainTable",
+    "level_name": "L1",
+    "x": 16.469,
+    "y": -15.991,
+    "z": 0,
+    "yaw": -3.142
+  },
+  {
+    "name": "OpenRobotics/KitchenCountertop",
+    "model_name": "OpenRobotics/KitchenCountertop",
+    "level_name": "L1",
+    "x": 18.346,
+    "y": -9.806,
+    "z": 0,
+    "yaw": 0
+  },
+  {
+    "name": "OpenRobotics/KitchenCountertop",
+    "model_name": "OpenRobotics/KitchenCountertop",
+    "level_name": "L1",
+    "x": 20.872,
+    "y": -9.88,
+    "z": 0,
+    "yaw": 0
+  },
+  {
+    "name": "OpenRobotics/CoffeeTable",
+    "model_name": "OpenRobotics/CoffeeTable",
+    "level_name": "L1",
+    "x": 8.446,
+    "y": -17.766,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/CoffeeTable",
+    "model_name": "OpenRobotics/CoffeeTable",
+    "level_name": "L1",
+    "x": 8.492,
+    "y": -16.201,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/CoffeeTable",
+    "model_name": "OpenRobotics/CoffeeTable",
+    "level_name": "L1",
+    "x": 10.198,
+    "y": -13.964,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/CoffeeTable",
+    "model_name": "OpenRobotics/CoffeeTable",
+    "level_name": "L1",
+    "x": 14.47,
+    "y": -9.616,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/CoffeeTable",
+    "model_name": "OpenRobotics/CoffeeTable",
+    "level_name": "L1",
+    "x": 14.452,
+    "y": -8.216,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/CoffeeTable",
+    "model_name": "OpenRobotics/CoffeeTable",
+    "level_name": "L1",
+    "x": 16.144,
+    "y": -8.17,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/CoffeeTable",
+    "model_name": "OpenRobotics/CoffeeTable",
+    "level_name": "L1",
+    "x": 16.235,
+    "y": -9.59,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/StorageRack",
+    "model_name": "OpenRobotics/StorageRack",
+    "level_name": "L1",
+    "x": 3.45,
+    "y": -33.366,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/StorageRack",
+    "model_name": "OpenRobotics/StorageRack",
+    "level_name": "L1",
+    "x": 3.45,
+    "y": -34.92,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/StorageRack",
+    "model_name": "OpenRobotics/StorageRack",
+    "level_name": "L1",
+    "x": 3.496,
+    "y": -36.743,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/StorageRack",
+    "model_name": "OpenRobotics/StorageRack",
+    "level_name": "L1",
+    "x": 5.856,
+    "y": -38.019,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/Fridge",
+    "model_name": "OpenRobotics/Fridge",
+    "level_name": "L1",
+    "x": 3.524,
+    "y": -38.074,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/Fridge",
+    "model_name": "OpenRobotics/Fridge",
+    "level_name": "L1",
+    "x": 3.496,
+    "y": -39.253,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/VendingMachine",
+    "model_name": "OpenRobotics/VendingMachine",
+    "level_name": "L1",
+    "x": 25.934,
+    "y": -38.032,
+    "z": 0,
+    "yaw": 3.126
+  },
+  {
+    "name": "OpenRobotics/VendingMachine",
+    "model_name": "OpenRobotics/VendingMachine",
+    "level_name": "L1",
+    "x": 25.902,
+    "y": -39.179,
+    "z": 0,
+    "yaw": 3.121
+  },
+  {
+    "name": "OpenRobotics/DeskChair",
+    "model_name": "OpenRobotics/DeskChair",
+    "level_name": "L1",
+    "x": 19.178,
+    "y": -27.666,
+    "z": 0,
+    "yaw": -1.585
+  },
+  {
+    "name": "OpenRobotics/DeskChair",
+    "model_name": "OpenRobotics/DeskChair",
+    "level_name": "L1",
+    "x": 20.721,
+    "y": -27.708,
+    "z": 0,
+    "yaw": -1.558
+  },
+  {
+    "name": "OpenRobotics/EscalatorStart",
+    "model_name": "OpenRobotics/EscalatorStart",
+    "level_name": "L1",
+    "x": 31.904,
+    "y": -28.495,
+    "z": 0,
+    "yaw": -1.574
+  },
+  {
+    "name": "OpenRobotics/MainTable",
+    "model_name": "OpenRobotics/MainTable",
+    "level_name": "L1",
+    "x": 10.877,
+    "y": -39.13,
+    "z": 0,
+    "yaw": -3.142
+  },
+  {
+    "name": "OpenRobotics/Suitcase2",
+    "model_name": "OpenRobotics/Suitcase2",
+    "level_name": "L1",
+    "x": 20.969,
+    "y": -29.328,
+    "z": 0,
+    "yaw": -2.859
+  },
+  {
+    "name": "OpenRobotics/Suitcase1",
+    "model_name": "OpenRobotics/Suitcase1",
+    "level_name": "L1",
+    "x": 20.367,
+    "y": -29.357,
+    "z": 0,
+    "yaw": -0.264
+  },
+  {
+    "name": "OpenRobotics/DigitalKiosk",
+    "model_name": "OpenRobotics/DigitalKiosk",
+    "level_name": "L1",
+    "x": 16.691,
+    "y": -26.681,
+    "z": 0,
+    "yaw": -1.548
+  },
+  {
+    "name": "OpenRobotics/Toilet",
+    "model_name": "OpenRobotics/Toilet",
+    "level_name": "L1",
+    "x": 27.609,
+    "y": -36.078,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/Toilet",
+    "model_name": "OpenRobotics/Toilet",
+    "level_name": "L1",
+    "x": 28.87,
+    "y": -36.087,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/Toilet",
+    "model_name": "OpenRobotics/Toilet",
+    "level_name": "L1",
+    "x": 30.066,
+    "y": -36.078,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/Toilet",
+    "model_name": "OpenRobotics/Toilet",
+    "level_name": "L1",
+    "x": 31.337,
+    "y": -36.078,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/Toilet",
+    "model_name": "OpenRobotics/Toilet",
+    "level_name": "L1",
+    "x": 27.42,
+    "y": -39.684,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/Toilet",
+    "model_name": "OpenRobotics/Toilet",
+    "level_name": "L1",
+    "x": 28.512,
+    "y": -39.665,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/Toilet",
+    "model_name": "OpenRobotics/Toilet",
+    "level_name": "L1",
+    "x": 29.934,
+    "y": -39.655,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/Toilet",
+    "model_name": "OpenRobotics/Toilet",
+    "level_name": "L1",
+    "x": 31.177,
+    "y": -39.693,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/NormalBed",
+    "model_name": "OpenRobotics/NormalBed",
+    "level_name": "L2",
+    "x": 2.988,
+    "y": -35.729,
+    "z": 0,
+    "yaw": 0
+  },
+  {
+    "name": "OpenRobotics/Shower",
+    "model_name": "OpenRobotics/Shower",
+    "level_name": "L2",
+    "x": 8.214,
+    "y": -33.545,
+    "z": 1,
+    "yaw": -3.135
+  },
+  {
+    "name": "OpenRobotics/Toilet",
+    "model_name": "OpenRobotics/Toilet",
+    "level_name": "L2",
+    "x": 6.993,
+    "y": -33.164,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/BathroomSink",
+    "model_name": "OpenRobotics/BathroomSink",
+    "level_name": "L2",
+    "x": 8.384,
+    "y": -31.886,
+    "z": 1,
+    "yaw": -1.571
+  },
+  {
+    "name": "OpenRobotics/NormalBed",
+    "model_name": "OpenRobotics/NormalBed",
+    "level_name": "L2",
+    "x": 2.988,
+    "y": -34.773,
+    "z": 0,
+    "yaw": 0
+  },
+  {
+    "name": "OpenRobotics/BedsideTable",
+    "model_name": "OpenRobotics/BedsideTable",
+    "level_name": "L2",
+    "x": 2.466,
+    "y": -33.83,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/Desk",
+    "model_name": "OpenRobotics/Desk",
+    "level_name": "L2",
+    "x": 8.017,
+    "y": -34.435,
+    "z": 0,
+    "yaw": -3.142
+  },
+  {
+    "name": "OpenRobotics/Chair",
+    "model_name": "OpenRobotics/Chair",
+    "level_name": "L2",
+    "x": 7.865,
+    "y": -36.702,
+    "z": 0,
+    "yaw": 2.631
+  },
+  {
+    "name": "OpenRobotics/WoodenChair",
+    "model_name": "OpenRobotics/WoodenChair",
+    "level_name": "L2",
+    "x": 7.304,
+    "y": -34.542,
+    "z": 0,
+    "yaw": 0.161
+  },
+  {
+    "name": "OpenRobotics/Chair",
+    "model_name": "OpenRobotics/Chair",
+    "level_name": "L2",
+    "x": 7.693,
+    "y": -35.773,
+    "z": 0,
+    "yaw": -2.875
+  },
+  {
+    "name": "OpenRobotics/TrashBin",
+    "model_name": "OpenRobotics/TrashBin",
+    "level_name": "L2",
+    "x": 2.445,
+    "y": -32.944,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/NormalBed",
+    "model_name": "OpenRobotics/NormalBed",
+    "level_name": "L2",
+    "x": 7.323,
+    "y": -26.756,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/NormalBed",
+    "model_name": "OpenRobotics/NormalBed",
+    "level_name": "L2",
+    "x": 7.339,
+    "y": -21.903,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/NormalBed",
+    "model_name": "OpenRobotics/NormalBed",
+    "level_name": "L2",
+    "x": 7.452,
+    "y": -17.179,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/NormalBed",
+    "model_name": "OpenRobotics/NormalBed",
+    "level_name": "L2",
+    "x": 7.417,
+    "y": -12.432,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/NormalBed",
+    "model_name": "OpenRobotics/NormalBed",
+    "level_name": "L2",
+    "x": 7.518,
+    "y": -7.826,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/NormalBed",
+    "model_name": "OpenRobotics/NormalBed",
+    "level_name": "L2",
+    "x": 19.6,
+    "y": -7.889,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/NormalBed",
+    "model_name": "OpenRobotics/NormalBed",
+    "level_name": "L2",
+    "x": 19.659,
+    "y": -12.674,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/NormalBed",
+    "model_name": "OpenRobotics/NormalBed",
+    "level_name": "L2",
+    "x": 19.517,
+    "y": -26.578,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/NormalBed",
+    "model_name": "OpenRobotics/NormalBed",
+    "level_name": "L2",
+    "x": 27.523,
+    "y": -26.621,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/NormalBed",
+    "model_name": "OpenRobotics/NormalBed",
+    "level_name": "L2",
+    "x": 26.54,
+    "y": -26.613,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/WoodenChair",
+    "model_name": "OpenRobotics/WoodenChair",
+    "level_name": "L2",
+    "x": 8.492,
+    "y": -26.939,
+    "z": 0,
+    "yaw": -1.589
+  },
+  {
+    "name": "OpenRobotics/Fridge",
+    "model_name": "OpenRobotics/Fridge",
+    "level_name": "L2",
+    "x": 2.402,
+    "y": -31.303,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/Desk",
+    "model_name": "OpenRobotics/Desk",
+    "level_name": "L2",
+    "x": 8.52,
+    "y": -27.501,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/Desk",
+    "model_name": "OpenRobotics/Desk",
+    "level_name": "L2",
+    "x": 8.504,
+    "y": -22.631,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/Desk",
+    "model_name": "OpenRobotics/Desk",
+    "level_name": "L2",
+    "x": 8.513,
+    "y": -17.809,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/Desk",
+    "model_name": "OpenRobotics/Desk",
+    "level_name": "L2",
+    "x": 8.594,
+    "y": -12.98,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/Desk",
+    "model_name": "OpenRobotics/Desk",
+    "level_name": "L2",
+    "x": 8.695,
+    "y": -8.455,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/Desk",
+    "model_name": "OpenRobotics/Desk",
+    "level_name": "L2",
+    "x": 18.339,
+    "y": -8.472,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/Desk",
+    "model_name": "OpenRobotics/Desk",
+    "level_name": "L2",
+    "x": 18.252,
+    "y": -13.359,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/Desk",
+    "model_name": "OpenRobotics/Desk",
+    "level_name": "L2",
+    "x": 17.576,
+    "y": -27.45,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/Desk",
+    "model_name": "OpenRobotics/Desk",
+    "level_name": "L2",
+    "x": 24.927,
+    "y": -27.516,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/Chair",
+    "model_name": "OpenRobotics/Chair",
+    "level_name": "L2",
+    "x": 16.289,
+    "y": -27.363,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/Chair",
+    "model_name": "OpenRobotics/Chair",
+    "level_name": "L2",
+    "x": 23.596,
+    "y": -27.407,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/Chair",
+    "model_name": "OpenRobotics/Chair",
+    "level_name": "L2",
+    "x": 9.405,
+    "y": -22.597,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/Chair",
+    "model_name": "OpenRobotics/Chair",
+    "level_name": "L2",
+    "x": 9.507,
+    "y": -17.829,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/Chair",
+    "model_name": "OpenRobotics/Chair",
+    "level_name": "L2",
+    "x": 9.385,
+    "y": -13.0,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/Chair",
+    "model_name": "OpenRobotics/Chair",
+    "level_name": "L2",
+    "x": 9.584,
+    "y": -8.439,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/Chair",
+    "model_name": "OpenRobotics/Chair",
+    "level_name": "L2",
+    "x": 17.481,
+    "y": -8.476,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/Chair",
+    "model_name": "OpenRobotics/Chair",
+    "level_name": "L2",
+    "x": 17.052,
+    "y": -13.293,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/NormalBed",
+    "model_name": "OpenRobotics/NormalBed",
+    "level_name": "L2",
+    "x": 9.818,
+    "y": -35.59,
+    "z": 0,
+    "yaw": 0
+  },
+  {
+    "name": "OpenRobotics/NormalBed",
+    "model_name": "OpenRobotics/NormalBed",
+    "level_name": "L2",
+    "x": 14.449,
+    "y": -35.629,
+    "z": 0,
+    "yaw": -0.018
+  },
+  {
+    "name": "OpenRobotics/NormalBed",
+    "model_name": "OpenRobotics/NormalBed",
+    "level_name": "L2",
+    "x": 19.238,
+    "y": -35.564,
+    "z": 0,
+    "yaw": 0.009
+  },
+  {
+    "name": "OpenRobotics/NormalBed",
+    "model_name": "OpenRobotics/NormalBed",
+    "level_name": "L2",
+    "x": 23.948,
+    "y": -35.642,
+    "z": 0,
+    "yaw": 0.016
+  },
+  {
+    "name": "OpenRobotics/NormalBed",
+    "model_name": "OpenRobotics/NormalBed",
+    "level_name": "L2",
+    "x": 28.71,
+    "y": -35.551,
+    "z": 0,
+    "yaw": 0.014
+  },
+  {
+    "name": "OpenRobotics/Toilet",
+    "model_name": "OpenRobotics/Toilet",
+    "level_name": "L2",
+    "x": 11.749,
+    "y": -32.889,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/Toilet",
+    "model_name": "OpenRobotics/Toilet",
+    "level_name": "L2",
+    "x": 16.55,
+    "y": -32.876,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/Toilet",
+    "model_name": "OpenRobotics/Toilet",
+    "level_name": "L2",
+    "x": 21.299,
+    "y": -32.485,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/Toilet",
+    "model_name": "OpenRobotics/Toilet",
+    "level_name": "L2",
+    "x": 25.957,
+    "y": -32.498,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/Toilet",
+    "model_name": "OpenRobotics/Toilet",
+    "level_name": "L2",
+    "x": 30.693,
+    "y": -32.576,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/CoffeeTable",
+    "model_name": "OpenRobotics/CoffeeTable",
+    "level_name": "L2",
+    "x": 9.132,
+    "y": -34.349,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/CoffeeTable",
+    "model_name": "OpenRobotics/CoffeeTable",
+    "level_name": "L2",
+    "x": 13.981,
+    "y": -34.44,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/CoffeeTable",
+    "model_name": "OpenRobotics/CoffeeTable",
+    "level_name": "L2",
+    "x": 18.618,
+    "y": -34.409,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/CoffeeTable",
+    "model_name": "OpenRobotics/CoffeeTable",
+    "level_name": "L2",
+    "x": 23.346,
+    "y": -34.591,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/CoffeeTable",
+    "model_name": "OpenRobotics/CoffeeTable",
+    "level_name": "L2",
+    "x": 28.165,
+    "y": -34.561,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/BathroomSink",
+    "model_name": "OpenRobotics/BathroomSink",
+    "level_name": "L2",
+    "x": 16.748,
+    "y": -31.019,
+    "z": 0,
+    "yaw": 0
+  },
+  {
+    "name": "OpenRobotics/BathroomSink",
+    "model_name": "OpenRobotics/BathroomSink",
+    "level_name": "L2",
+    "x": 21.523,
+    "y": -31.343,
+    "z": 0,
+    "yaw": 0
+  },
+  {
+    "name": "OpenRobotics/BathroomSink",
+    "model_name": "OpenRobotics/BathroomSink",
+    "level_name": "L2",
+    "x": 26.271,
+    "y": -31.019,
+    "z": 0,
+    "yaw": 0
+  },
+  {
+    "name": "OpenRobotics/BathroomSink",
+    "model_name": "OpenRobotics/BathroomSink",
+    "level_name": "L2",
+    "x": 11.935,
+    "y": -31.032,
+    "z": 0,
+    "yaw": -0.035
+  },
+  {
+    "name": "OpenRobotics/NormalBed",
+    "model_name": "OpenRobotics/NormalBed",
+    "level_name": "L3",
+    "x": 2.988,
+    "y": -35.729,
+    "z": 0,
+    "yaw": 0
+  },
+  {
+    "name": "OpenRobotics/Shower",
+    "model_name": "OpenRobotics/Shower",
+    "level_name": "L3",
+    "x": 8.214,
+    "y": -33.545,
+    "z": 1,
+    "yaw": -3.135
+  },
+  {
+    "name": "OpenRobotics/Toilet",
+    "model_name": "OpenRobotics/Toilet",
+    "level_name": "L3",
+    "x": 6.993,
+    "y": -33.164,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/BathroomSink",
+    "model_name": "OpenRobotics/BathroomSink",
+    "level_name": "L3",
+    "x": 8.384,
+    "y": -31.886,
+    "z": 1,
+    "yaw": -1.571
+  },
+  {
+    "name": "OpenRobotics/NormalBed",
+    "model_name": "OpenRobotics/NormalBed",
+    "level_name": "L3",
+    "x": 2.988,
+    "y": -34.773,
+    "z": 0,
+    "yaw": 0
+  },
+  {
+    "name": "OpenRobotics/BedsideTable",
+    "model_name": "OpenRobotics/BedsideTable",
+    "level_name": "L3",
+    "x": 2.466,
+    "y": -33.83,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/Desk",
+    "model_name": "OpenRobotics/Desk",
+    "level_name": "L3",
+    "x": 8.017,
+    "y": -34.435,
+    "z": 0,
+    "yaw": -3.142
+  },
+  {
+    "name": "OpenRobotics/Chair",
+    "model_name": "OpenRobotics/Chair",
+    "level_name": "L3",
+    "x": 7.865,
+    "y": -36.702,
+    "z": 0,
+    "yaw": 2.631
+  },
+  {
+    "name": "OpenRobotics/WoodenChair",
+    "model_name": "OpenRobotics/WoodenChair",
+    "level_name": "L3",
+    "x": 7.304,
+    "y": -34.542,
+    "z": 0,
+    "yaw": 0.161
+  },
+  {
+    "name": "OpenRobotics/Chair",
+    "model_name": "OpenRobotics/Chair",
+    "level_name": "L3",
+    "x": 7.693,
+    "y": -35.773,
+    "z": 0,
+    "yaw": -2.875
+  },
+  {
+    "name": "OpenRobotics/TrashBin",
+    "model_name": "OpenRobotics/TrashBin",
+    "level_name": "L3",
+    "x": 2.445,
+    "y": -32.944,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/NormalBed",
+    "model_name": "OpenRobotics/NormalBed",
+    "level_name": "L3",
+    "x": 7.323,
+    "y": -26.756,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/NormalBed",
+    "model_name": "OpenRobotics/NormalBed",
+    "level_name": "L3",
+    "x": 7.339,
+    "y": -21.903,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/NormalBed",
+    "model_name": "OpenRobotics/NormalBed",
+    "level_name": "L3",
+    "x": 7.452,
+    "y": -17.179,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/NormalBed",
+    "model_name": "OpenRobotics/NormalBed",
+    "level_name": "L3",
+    "x": 7.417,
+    "y": -12.432,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/NormalBed",
+    "model_name": "OpenRobotics/NormalBed",
+    "level_name": "L3",
+    "x": 7.518,
+    "y": -7.826,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/NormalBed",
+    "model_name": "OpenRobotics/NormalBed",
+    "level_name": "L3",
+    "x": 19.6,
+    "y": -7.889,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/NormalBed",
+    "model_name": "OpenRobotics/NormalBed",
+    "level_name": "L3",
+    "x": 19.659,
+    "y": -12.674,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/NormalBed",
+    "model_name": "OpenRobotics/NormalBed",
+    "level_name": "L3",
+    "x": 19.517,
+    "y": -26.578,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/NormalBed",
+    "model_name": "OpenRobotics/NormalBed",
+    "level_name": "L3",
+    "x": 27.523,
+    "y": -26.621,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/NormalBed",
+    "model_name": "OpenRobotics/NormalBed",
+    "level_name": "L3",
+    "x": 26.54,
+    "y": -26.613,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/WoodenChair",
+    "model_name": "OpenRobotics/WoodenChair",
+    "level_name": "L3",
+    "x": 8.492,
+    "y": -26.939,
+    "z": 0,
+    "yaw": -1.589
+  },
+  {
+    "name": "OpenRobotics/Fridge",
+    "model_name": "OpenRobotics/Fridge",
+    "level_name": "L3",
+    "x": 2.402,
+    "y": -31.303,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/Desk",
+    "model_name": "OpenRobotics/Desk",
+    "level_name": "L3",
+    "x": 8.52,
+    "y": -27.501,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/Desk",
+    "model_name": "OpenRobotics/Desk",
+    "level_name": "L3",
+    "x": 8.504,
+    "y": -22.631,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/Desk",
+    "model_name": "OpenRobotics/Desk",
+    "level_name": "L3",
+    "x": 8.513,
+    "y": -17.809,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/Desk",
+    "model_name": "OpenRobotics/Desk",
+    "level_name": "L3",
+    "x": 8.594,
+    "y": -12.98,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/Desk",
+    "model_name": "OpenRobotics/Desk",
+    "level_name": "L3",
+    "x": 8.695,
+    "y": -8.455,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/Desk",
+    "model_name": "OpenRobotics/Desk",
+    "level_name": "L3",
+    "x": 18.339,
+    "y": -8.472,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/Desk",
+    "model_name": "OpenRobotics/Desk",
+    "level_name": "L3",
+    "x": 18.252,
+    "y": -13.359,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/Desk",
+    "model_name": "OpenRobotics/Desk",
+    "level_name": "L3",
+    "x": 17.576,
+    "y": -27.45,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/Desk",
+    "model_name": "OpenRobotics/Desk",
+    "level_name": "L3",
+    "x": 24.927,
+    "y": -27.516,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/Chair",
+    "model_name": "OpenRobotics/Chair",
+    "level_name": "L3",
+    "x": 16.289,
+    "y": -27.363,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/Chair",
+    "model_name": "OpenRobotics/Chair",
+    "level_name": "L3",
+    "x": 23.596,
+    "y": -27.407,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/Chair",
+    "model_name": "OpenRobotics/Chair",
+    "level_name": "L3",
+    "x": 9.405,
+    "y": -22.597,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/Chair",
+    "model_name": "OpenRobotics/Chair",
+    "level_name": "L3",
+    "x": 9.507,
+    "y": -17.829,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/Chair",
+    "model_name": "OpenRobotics/Chair",
+    "level_name": "L3",
+    "x": 9.385,
+    "y": -13.0,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/Chair",
+    "model_name": "OpenRobotics/Chair",
+    "level_name": "L3",
+    "x": 9.584,
+    "y": -8.439,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/Chair",
+    "model_name": "OpenRobotics/Chair",
+    "level_name": "L3",
+    "x": 17.481,
+    "y": -8.476,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/Chair",
+    "model_name": "OpenRobotics/Chair",
+    "level_name": "L3",
+    "x": 17.052,
+    "y": -13.293,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/NormalBed",
+    "model_name": "OpenRobotics/NormalBed",
+    "level_name": "L3",
+    "x": 9.818,
+    "y": -35.59,
+    "z": 0,
+    "yaw": 0
+  },
+  {
+    "name": "OpenRobotics/NormalBed",
+    "model_name": "OpenRobotics/NormalBed",
+    "level_name": "L3",
+    "x": 14.449,
+    "y": -35.629,
+    "z": 0,
+    "yaw": -0.018
+  },
+  {
+    "name": "OpenRobotics/NormalBed",
+    "model_name": "OpenRobotics/NormalBed",
+    "level_name": "L3",
+    "x": 19.238,
+    "y": -35.564,
+    "z": 0,
+    "yaw": 0.009
+  },
+  {
+    "name": "OpenRobotics/NormalBed",
+    "model_name": "OpenRobotics/NormalBed",
+    "level_name": "L3",
+    "x": 23.948,
+    "y": -35.642,
+    "z": 0,
+    "yaw": 0.016
+  },
+  {
+    "name": "OpenRobotics/NormalBed",
+    "model_name": "OpenRobotics/NormalBed",
+    "level_name": "L3",
+    "x": 28.71,
+    "y": -35.551,
+    "z": 0,
+    "yaw": 0.014
+  },
+  {
+    "name": "OpenRobotics/Toilet",
+    "model_name": "OpenRobotics/Toilet",
+    "level_name": "L3",
+    "x": 11.749,
+    "y": -32.889,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/Toilet",
+    "model_name": "OpenRobotics/Toilet",
+    "level_name": "L3",
+    "x": 16.55,
+    "y": -32.876,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/Toilet",
+    "model_name": "OpenRobotics/Toilet",
+    "level_name": "L3",
+    "x": 21.299,
+    "y": -32.485,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/Toilet",
+    "model_name": "OpenRobotics/Toilet",
+    "level_name": "L3",
+    "x": 25.957,
+    "y": -32.498,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/Toilet",
+    "model_name": "OpenRobotics/Toilet",
+    "level_name": "L3",
+    "x": 30.693,
+    "y": -32.576,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/CoffeeTable",
+    "model_name": "OpenRobotics/CoffeeTable",
+    "level_name": "L3",
+    "x": 9.132,
+    "y": -34.349,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/CoffeeTable",
+    "model_name": "OpenRobotics/CoffeeTable",
+    "level_name": "L3",
+    "x": 13.981,
+    "y": -34.44,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/CoffeeTable",
+    "model_name": "OpenRobotics/CoffeeTable",
+    "level_name": "L3",
+    "x": 18.618,
+    "y": -34.409,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/CoffeeTable",
+    "model_name": "OpenRobotics/CoffeeTable",
+    "level_name": "L3",
+    "x": 23.346,
+    "y": -34.591,
+    "z": 0,
+    "yaw": 1.571
+  },
+  {
+    "name": "OpenRobotics/CoffeeTable",
+    "model_name": "OpenRobotics/CoffeeTable",
+    "level_name": "L3",
+    "x": 28.165,
+    "y": -34.561,
+    "z": 0,
+    "yaw": 1.571
+  }
+]

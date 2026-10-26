@@ -1,0 +1,89 @@
+[
+  {
+    "name": "cleanerBotA",
+    "robots": [
+      {
+        "name": "cleanerBotA_1",
+        "model": "Commercial Floor Scrubber",
+        "battery": 0.95,
+        "location": {
+          "x": 26.365,
+          "y": -27.753,
+          "yaw": 1.57,
+          "level_name": "L1",
+          "speed": 0.0
+        },
+        "path": [],
+        "mode": "idle",
+        "task_id": null,
+        "commissioned": true,
+        "seq": 1001,
+        "last_heartbeat": 1719999000000
+      },
+      {
+        "name": "cleanerBotA_2",
+        "model": "Commercial Floor Scrubber",
+        "battery": 1.0,
+        "location": {
+          "x": 29.239,
+          "y": -27.663,
+          "yaw": 1.57,
+          "level_name": "L1",
+          "speed": 0.0
+        },
+        "path": [],
+        "mode": "charging",
+        "task_id": null,
+        "commissioned": true,
+        "seq": 1002,
+        "last_heartbeat": 1719999000000
+      }
+    ]
+  },
+  {
+    "name": "deliveryRobot",
+    "robots": [
+      {
+        "name": "deliveryBot_1",
+        "model": "Autonomous Room Service Delivery",
+        "battery": 0.9,
+        "location": {
+          "x": 14.557,
+          "y": -38.976,
+          "yaw": 3.14,
+          "level_name": "L1",
+          "speed": 0.0
+        },
+        "path": [],
+        "mode": "idle",
+        "task_id": null,
+        "commissioned": true,
+        "seq": 2001,
+        "last_heartbeat": 1719999000000
+      }
+    ]
+  },
+  {
+    "name": "tinyRobot",
+    "robots": [
+      {
+        "name": "tinyBot_1",
+        "model": "Autonomous Mobile Transporter",
+        "battery": 0.88,
+        "location": {
+          "x": 23.542,
+          "y": -27.42,
+          "yaw": 0.0,
+          "level_name": "L1",
+          "speed": 0.0
+        },
+        "path": [],
+        "mode": "idle",
+        "task_id": null,
+        "commissioned": true,
+        "seq": 3001,
+        "last_heartbeat": 1719999000000
+      }
+    ]
+  }
+]

@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState, useCallback, useMemo } from 'react';
-import { Layers, Box } from 'lucide-react';
+import { Layers, Box, Plus, Send, X } from 'lucide-react';
 import { useFms } from '../../context/FmsContext';
 import { MapControls } from './MapControls';
 import { RobotDetailDrawer } from './RobotDetailDrawer';
@@ -19,12 +19,18 @@ export const DigitalTwinMap: React.FC = () => {
     setSelectedRobot,
     toggleDoor,
     callLift,
+    dispatchNewTask,
   } = useFms();
 
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   // 2D Blueprint vs 3D Three.js Digital Twin
   const [viewMode, setViewMode] = useState<'2d' | '3d'>('3d');
+  const [showQuickTask, setShowQuickTask] = useState(false);
+  const [quickDestination, setQuickDestination] = useState('');
+  const [quickTarget, setQuickTarget] = useState('');
+  const [quickSubmitting, setQuickSubmitting] = useState(false);
+  const [quickMessage, setQuickMessage] = useState<string | null>(null);
 
   // Pan & Zoom state
   const [zoom, setZoom] = useState<number>(1.0);
@@ -57,6 +63,53 @@ export const DigitalTwinMap: React.FC = () => {
     .flatMap((f) => f.robots)
     .filter((r) => r.location.level_name === selectedFloor);
 
+  const waypointNames = useMemo(() => {
+    const names = buildingMap.levels.flatMap((level) =>
+      level.nav_graphs.flatMap((graph) => [
+        ...graph.vertices.map((vertex) => vertex.name).filter((name): name is string => Boolean(name)),
+        ...(graph.waypoint_names || []),
+      ]),
+    );
+    return Array.from(new Set(names));
+  }, [buildingMap]);
+
+  const openQuickTask = () => {
+    setQuickDestination((current) => current || waypointNames[0] || '');
+    if (selectedRobot) {
+      const fleet = fleets.find((item) => item.robots.some((robot) => robot.name === selectedRobot.name));
+      setQuickTarget(fleet ? `${fleet.name}::${selectedRobot.name}` : '');
+    }
+    setQuickMessage(null);
+    setShowQuickTask(true);
+  };
+
+  const submitQuickTask = async () => {
+    if (!quickDestination || quickSubmitting) return;
+    const [targetFleet, targetRobot] = quickTarget ? quickTarget.split('::') : [];
+    setQuickSubmitting(true);
+    setQuickMessage(null);
+    try {
+      await dispatchNewTask({
+        category: 'move',
+        targetFleet: targetFleet || undefined,
+        targetRobot: targetRobot || undefined,
+        priority: 0,
+        patrolWaypoints: [],
+        rounds: 1,
+        pickupPlace: '',
+        dropoffPlace: '',
+        cleanZone: '',
+        destinationWaypoint: quickDestination,
+      });
+      setQuickMessage(`Task dispatched to ${quickDestination}`);
+      window.setTimeout(() => setShowQuickTask(false), 900);
+    } catch (error: any) {
+      setQuickMessage(error?.message || 'Unable to dispatch task');
+    } finally {
+      setQuickSubmitting(false);
+    }
+  };
+
   // Floorplan image overlay
   const [floorplanImg, setFloorplanImg] = useState<HTMLImageElement | null>(null);
 
@@ -67,17 +120,25 @@ export const DigitalTwinMap: React.FC = () => {
     const hasFloatOrNeg = (n?: number) => n !== undefined && (n < 0 || Math.floor(n) !== n);
     const firstVert = currentLevel.nav_graphs?.[0]?.vertices?.[0];
     const firstWall = currentLevel.wall_segments?.[0];
+    const firstRobot = allRobotsOnFloor[0];
     if (
       hasFloatOrNeg(firstVert?.y) ||
       hasFloatOrNeg(firstVert?.x) ||
       hasFloatOrNeg(firstWall?.y1) ||
-      hasFloatOrNeg(firstWall?.x1)
+      hasFloatOrNeg(firstWall?.x1) ||
+      hasFloatOrNeg(firstRobot?.location.x) ||
+      hasFloatOrNeg(firstRobot?.location.y)
     ) {
       return true;
     }
     const nameLower = (buildingMap.name || '').toLowerCase();
-    return nameLower.includes('airport') || nameLower.includes('terminal') || nameLower.includes('office');
-  }, [buildingMap.name, currentLevel]);
+    return (
+      nameLower.includes('airport') ||
+      nameLower.includes('terminal') ||
+      nameLower.includes('office') ||
+      nameLower.includes('hotel')
+    );
+  }, [buildingMap.name, currentLevel, allRobotsOnFloor]);
 
   const originOffset = useMemo(() => {
     if (!isMetric || !currentLevel) {
@@ -101,10 +162,16 @@ export const DigitalTwinMap: React.FC = () => {
         maxY = Math.max(maxY, v.y);
       });
     });
+    allRobotsOnFloor.forEach((robot) => {
+      minX = Math.min(minX, robot.location.x);
+      maxX = Math.max(maxX, robot.location.x);
+      minY = Math.min(minY, robot.location.y);
+      maxY = Math.max(maxY, robot.location.y);
+    });
     if (minX === 99999) {
       minX = 0;
-      maxX = 280;
-      minY = -65;
+      maxX = 35;
+      minY = -45;
       maxY = 0;
     }
     return {
@@ -115,13 +182,14 @@ export const DigitalTwinMap: React.FC = () => {
       width: Math.max(1, maxX - minX),
       height: Math.max(1, maxY - minY),
     };
-  }, [isMetric, currentLevel]);
+  }, [isMetric, currentLevel, allRobotsOnFloor]);
 
-  // Adaptive meter scale: large airport terminal (~282m) uses 9.5 px/m, office (~25m) uses 45 px/m
+  // Adaptive meter scale: large airport terminal (~282m) uses 10 px/m, hotel (~31m) uses 28 px/m
   const meterScale = useMemo(() => {
     if (!isMetric) return 1;
     if (originOffset.width > 150) return 10;
     if (originOffset.width > 60) return 22;
+    if (originOffset.width > 20) return 28;
     return 45;
   }, [isMetric, originOffset.width]);
 
@@ -129,7 +197,14 @@ export const DigitalTwinMap: React.FC = () => {
   useEffect(() => {
     const rawUrl = currentLevel?.images?.[0]?.data;
     const isAirport = (buildingMap.name || '').toLowerCase().includes('airport');
-    const targetSrc = rawUrl || (isAirport ? '/maps/airport_terminal.png' : null);
+    const isHotel = (buildingMap.name || '').toLowerCase().includes('hotel');
+    const targetSrc =
+      rawUrl ||
+      (isAirport
+        ? '/maps/airport_terminal.png'
+        : isHotel
+          ? `/maps/hotel_${selectedFloor || 'L1'}.png`
+          : null);
 
     if (!targetSrc) {
       setFloorplanImg(null);
@@ -145,15 +220,23 @@ export const DigitalTwinMap: React.FC = () => {
         const fallback = new Image();
         fallback.src = '/maps/airport_terminal.png';
         fallback.onload = () => setFloorplanImg(fallback);
+      } else if (isHotel && targetSrc !== `/maps/hotel_${selectedFloor || 'L1'}.png`) {
+        const fallback = new Image();
+        fallback.src = `/maps/hotel_${selectedFloor || 'L1'}.png`;
+        fallback.onload = () => setFloorplanImg(fallback);
       }
     };
-  }, [currentLevel, buildingMap.name]);
+  }, [currentLevel, buildingMap.name, selectedFloor]);
 
   // Auto-fit initial view on floor switch or map resize
   useEffect(() => {
     if (originOffset.width > 150) {
       setZoom(0.42);
       setOffset({ x: 30, y: 130 });
+    } else if (originOffset.width > 20 && originOffset.width < 60) {
+      // Hotel is ~31m wide
+      setZoom(0.85);
+      setOffset({ x: 140, y: 50 });
     } else {
       setZoom(1.0);
       setOffset({ x: 40, y: 30 });
@@ -403,27 +486,31 @@ export const DigitalTwinMap: React.FC = () => {
       // 6. Draw Lifts
       if (layers.showLifts && buildingMap.lifts) {
         buildingMap.lifts.forEach((lift) => {
-          const p = toCanvasPos(lift.ref_x || 480, lift.ref_y || 280);
+          const rx = lift.ref_x !== undefined ? lift.ref_x : 480;
+          const ry = lift.ref_y !== undefined ? lift.ref_y : 280;
+          const p = toCanvasPos(rx, ry);
           const state = liftStates[lift.name];
+          const liftW = isMetric ? (lift.width || 2.7) * meterScale : 40;
+          const liftH = isMetric ? (lift.depth || 2.7) * meterScale : 40;
 
-          ctx.fillStyle = 'rgba(139, 92, 246, 0.2)';
+          ctx.fillStyle = 'rgba(139, 92, 246, 0.25)';
           ctx.strokeStyle = '#8B5CF6';
           ctx.lineWidth = 2;
 
           ctx.beginPath();
-          ctx.roundRect(p.x - 20, p.y - 20, 40, 40, 6);
+          ctx.roundRect(p.x - liftW / 2, p.y - liftH / 2, liftW, liftH, 6);
           ctx.fill();
           ctx.stroke();
 
-          ctx.fillStyle = '#8B5CF6';
-          ctx.font = 'bold 11px "Inter"';
+          ctx.fillStyle = '#C084FC';
+          ctx.font = 'bold 10px "Inter"';
           ctx.textAlign = 'center';
-          ctx.fillText(`ELEV: ${state?.current_floor || 'L1'}`, p.x, p.y + 4);
+          ctx.fillText(`LIFT: ${state?.current_floor || selectedFloor}`, p.x, p.y + 4);
 
           if (layers.showLabels) {
             ctx.font = '9px "JetBrains Mono"';
             ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
-            ctx.fillText(lift.name, p.x, p.y + 28);
+            ctx.fillText(lift.name, p.x, p.y + liftH / 2 + 12);
           }
           ctx.textAlign = 'left';
         });
@@ -452,10 +539,10 @@ export const DigitalTwinMap: React.FC = () => {
           ctx.fillStyle = isSelected
             ? '#00F0FF'
             : robot.mode === 'emergency'
-            ? '#EF4444'
-            : robot.mode === 'charging'
-            ? '#F59E0B'
-            : '#0284C7';
+              ? '#EF4444'
+              : robot.mode === 'charging'
+                ? '#F59E0B'
+                : '#0284C7';
           ctx.shadowColor = ctx.fillStyle;
           ctx.shadowBlur = isSelected ? 16 : 8;
 
@@ -605,9 +692,13 @@ export const DigitalTwinMap: React.FC = () => {
     // Check click on lift
     if (buildingMap.lifts) {
       for (const lift of buildingMap.lifts) {
-        const p = toCanvasPos(lift.ref_x || 480, lift.ref_y || 280);
-        if (Math.hypot(p.x - clickX, p.y - clickY) <= 25) {
-          const targetFloor = selectedFloor === 'L1' ? 'L2' : 'L1';
+        const rx = lift.ref_x !== undefined ? lift.ref_x : 480;
+        const ry = lift.ref_y !== undefined ? lift.ref_y : 280;
+        const p = toCanvasPos(rx, ry);
+        if (Math.hypot(p.x - clickX, p.y - clickY) <= 30) {
+          const availFloors = lift.levels && lift.levels.length > 0 ? lift.levels : ['L1', 'L2', 'L3'];
+          const currIdx = availFloors.indexOf(selectedFloor);
+          const targetFloor = availFloors[(currIdx + 1) % availFloors.length];
           callLift(lift.name, targetFloor);
           return;
         }
@@ -687,6 +778,116 @@ export const DigitalTwinMap: React.FC = () => {
           <Box size={14} />
           <span>3D Digital Twin</span>
         </button>
+      </div>
+
+      {/* Quick task launcher available directly from the map */}
+      <div
+        style={{
+          position: 'absolute',
+          left: '16px',
+          bottom: '16px',
+          zIndex: 30,
+        }}
+      >
+        {!showQuickTask ? (
+          <button
+            type="button"
+            onClick={openQuickTask}
+            className="btn btn-primary"
+            style={{ boxShadow: '0 8px 28px rgba(0, 240, 255, 0.25)' }}
+          >
+            <Plus size={16} />
+            <span>Create Task</span>
+          </button>
+        ) : (
+          <div
+            className="glass-panel"
+            style={{
+              width: '320px',
+              padding: '14px',
+              background: 'rgba(10, 14, 22, 0.96)',
+              boxShadow: '0 16px 40px rgba(0, 0, 0, 0.55)',
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
+              <div>
+                <div style={{ color: '#fff', fontWeight: 700, fontSize: '13px' }}>Quick Dispatch</div>
+                <div style={{ color: 'var(--text-muted)', fontSize: '10px', marginTop: '2px' }}>
+                  Send a robot to a waypoint
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowQuickTask(false)}
+                className="btn btn-secondary"
+                style={{ padding: '6px' }}
+                aria-label="Close quick dispatch"
+              >
+                <X size={14} />
+              </button>
+            </div>
+
+            <label style={{ display: 'block', color: 'var(--text-muted)', fontSize: '10px', marginBottom: '5px' }}>
+              Destination
+            </label>
+            <select
+              value={quickDestination}
+              onChange={(event) => setQuickDestination(event.target.value)}
+              style={{
+                width: '100%',
+                padding: '9px 10px',
+                marginBottom: '10px',
+                background: 'var(--bg-surface-elevated)',
+                border: '1px solid var(--border-subtle)',
+                borderRadius: '7px',
+                color: '#fff',
+              }}
+            >
+              {waypointNames.map((waypoint) => <option key={waypoint} value={waypoint}>{waypoint}</option>)}
+            </select>
+
+            <label style={{ display: 'block', color: 'var(--text-muted)', fontSize: '10px', marginBottom: '5px' }}>
+              Robot assignment
+            </label>
+            <select
+              value={quickTarget}
+              onChange={(event) => setQuickTarget(event.target.value)}
+              style={{
+                width: '100%',
+                padding: '9px 10px',
+                marginBottom: '12px',
+                background: 'var(--bg-surface-elevated)',
+                border: '1px solid var(--border-subtle)',
+                borderRadius: '7px',
+                color: '#fff',
+              }}
+            >
+              <option value="">Automatic assignment</option>
+              {fleets.flatMap((fleet) => fleet.robots.map((robot) => (
+                <option key={`${fleet.name}::${robot.name}`} value={`${fleet.name}::${robot.name}`}>
+                  {robot.name} · {fleet.name}
+                </option>
+              )))}
+            </select>
+
+            {quickMessage && (
+              <div style={{ color: quickMessage.startsWith('Task dispatched') ? '#10B981' : '#EF4444', fontSize: '11px', marginBottom: '10px' }}>
+                {quickMessage}
+              </div>
+            )}
+
+            <button
+              type="button"
+              onClick={submitQuickTask}
+              disabled={!quickDestination || quickSubmitting}
+              className="btn btn-primary"
+              style={{ width: '100%', justifyContent: 'center', opacity: !quickDestination || quickSubmitting ? 0.55 : 1 }}
+            >
+              <Send size={14} />
+              <span>{quickSubmitting ? 'Dispatching...' : 'Dispatch Task'}</span>
+            </button>
+          </div>
+        )}
       </div>
 
       {viewMode === '2d' ? (

@@ -9,12 +9,17 @@ import {
   MutexGroup,
   TaskLogEntry,
 } from '../types/rmf';
+import hotelBuildingMapData from '../data/hotelBuildingMap.json';
+import hotelFleetsData from '../data/hotelFleets.json';
 import airportBuildingMapData from '../data/airportBuildingMap.json';
 import airportFleetsData from '../data/airportFleets.json';
 
-export const INITIAL_BUILDING_MAP: BuildingMap = airportBuildingMapData as BuildingMap;
+export const INITIAL_BUILDING_MAP: BuildingMap = hotelBuildingMapData as BuildingMap;
 
-export const INITIAL_FLEETS: FleetState[] = airportFleetsData as FleetState[];
+export const INITIAL_FLEETS: FleetState[] = hotelFleetsData as FleetState[];
+
+export const AIRPORT_BUILDING_MAP: BuildingMap = airportBuildingMapData as BuildingMap;
+export const AIRPORT_FLEETS: FleetState[] = airportFleetsData as FleetState[];
 
 export const LEGACY_BUILDING_MAP: BuildingMap = {
   name: 'VNTT_HighTech_Campus',
@@ -310,88 +315,38 @@ export const LEGACY_FLEETS: FleetState[] = [
 export const INITIAL_TASKS: TaskState[] = [
   {
     booking: {
-      id: 'task_deliv_8819',
-      requester: 'ERP_MES_Dispatcher',
-      unix_millis_request_time: Date.now() - 320000,
-      priority: { type: 'binary', value: 1 },
-      labels: ['sku=IC_CHIP_TRAY_50', 'zone=assembly'],
+      id: 'task_hotel_deliv_101',
+      requester: 'RoomService_Kitchen',
+      unix_millis_request_time: Date.now() - 150000,
+      labels: ['suite=L2_master_suite', 'type=vip_meal_service'],
+      priority: { type: 'high', value: 1 },
     },
     category: 'delivery',
     assigned_to: {
-      group: 'TinyRobotFleet',
-      name: 'tinyRobot_01',
+      group: 'deliveryRobot',
+      name: 'deliveryBot_1',
     },
     status: 'underway',
-    progress: 68,
-    unix_millis_start_time: Date.now() - 280000,
-    estimate_millis: 400000,
+    progress: 45,
+    unix_millis_start_time: Date.now() - 120000,
+    estimate_millis: 360000,
     phases: [
       {
         id: 1,
-        category: 'navigation',
-        detail: 'Navigate to Station_Prep_A pickup station',
-        status: 'completed',
-        unix_millis_start_time: Date.now() - 280000,
-        unix_millis_finish_time: Date.now() - 190000,
-      },
-      {
-        id: 2,
-        category: 'dispenser',
-        detail: 'Wait dispenser Dispenser_IC_01 to load tray',
-        status: 'completed',
-        unix_millis_start_time: Date.now() - 190000,
-        unix_millis_finish_time: Date.now() - 120000,
-      },
-      {
-        id: 3,
-        category: 'navigation',
-        detail: 'Transit through Corridor_West & AirLock_Main to Rack_A1_Pickup',
-        status: 'underway',
-        unix_millis_start_time: Date.now() - 120000,
-      },
-      {
-        id: 4,
-        category: 'ingestor',
-        detail: 'Offload tray at Rack_A1_Pickup intake buffer',
-        status: 'pending',
-      },
-    ],
-    active_phase_index: 2,
-  },
-  {
-    booking: {
-      id: 'task_patrol_2031',
-      requester: 'Security_Monitor',
-      unix_millis_request_time: Date.now() - 500000,
-      priority: { type: 'binary', value: 0 },
-      labels: ['route=cleanroom_perimeter', 'rounds=3'],
-    },
-    category: 'patrol',
-    assigned_to: {
-      group: 'TinyRobotFleet',
-      name: 'tinyRobot_02',
-    },
-    status: 'underway',
-    progress: 42,
-    unix_millis_start_time: Date.now() - 480000,
-    estimate_millis: 900000,
-    phases: [
-      {
-        id: 1,
-        category: 'patrol_round_1',
-        detail: 'Patrol Corridor_South waypoint check',
+        category: 'pickup',
+        detail: 'Pickup gourmet meal tray at Kitchen Dispenser (L1)',
         status: 'completed',
       },
       {
         id: 2,
-        category: 'patrol_round_2',
-        detail: 'Patrol Cleanroom_Bay_1 waypoint inspect',
+        category: 'lift_transit',
+        detail: 'Board Lift1 from L1 -> L2',
         status: 'underway',
       },
       {
         id: 3,
-        category: 'patrol_round_3',
-        detail: 'Patrol Return to Crossroad_Center',
+        category: 'dropoff',
+        detail: 'Deliver tray to L2 Master Suite',
         status: 'pending',
       },
     ],
@@ -399,25 +354,25 @@ export const INITIAL_TASKS: TaskState[] = [
   },
   {
     booking: {
-      id: 'task_clean_3002',
-      requester: 'Facility_Manager',
-      unix_millis_request_time: Date.now() - 700000,
-      labels: ['zone=Depot_North', 'intensity=deep'],
+      id: 'task_hotel_clean_202',
+      requester: 'Housekeeping_Dept',
+      unix_millis_request_time: Date.now() - 400000,
+      labels: ['zone=L1_Lobby', 'intensity=standard'],
     },
     category: 'clean',
     assigned_to: {
-      group: 'CleanerFleet',
-      name: 'cleanerBot_01',
+      group: 'cleanerBotA',
+      name: 'cleanerBotA_1',
     },
     status: 'underway',
-    progress: 85,
-    unix_millis_start_time: Date.now() - 650000,
-    estimate_millis: 750000,
+    progress: 68,
+    unix_millis_start_time: Date.now() - 350000,
+    estimate_millis: 600000,
     phases: [
       {
         id: 1,
-        category: 'clean_zone',
-        detail: 'Surface sanitization in Depot_North',
+        category: 'clean',
+        detail: 'Autonomous scrubbing and polishing of Hotel Lobby & Waiting Area (L1)',
         status: 'underway',
       },
     ],
@@ -425,157 +380,105 @@ export const INITIAL_TASKS: TaskState[] = [
   },
   {
     booking: {
-      id: 'task_deliv_9142',
-      requester: 'WMS_System',
-      unix_millis_request_time: Date.now() - 120000,
-      labels: ['pallet_id=PALLET_9921', 'destination=dock'],
-    },
-    category: 'delivery',
-    assigned_to: {
-      group: 'DeliveryFleet',
-      name: 'forklift_01',
-    },
-    status: 'underway',
-    progress: 30,
-    unix_millis_start_time: Date.now() - 100000,
-    estimate_millis: 300000,
-    phases: [
-      {
-        id: 1,
-        category: 'load_pallet',
-        detail: 'Engage pallet forks at Rack_B2_Dropoff',
-        status: 'underway',
-      },
-      {
-        id: 2,
-        category: 'transit',
-        detail: 'Transport pallet to Outbound_Dock',
-        status: 'pending',
-      },
-    ],
-    active_phase_index: 0,
-  },
-  {
-    booking: {
-      id: 'task_queued_1044',
-      requester: 'Operator_Truong',
-      unix_millis_request_time: Date.now() - 30000,
-      labels: ['type=material_dispatch'],
-    },
-    category: 'delivery',
-    status: 'queued',
-    progress: 0,
-  },
-  {
-    booking: {
-      id: 'task_done_5510',
-      requester: 'AutoScheduler',
-      unix_millis_request_time: Date.now() - 3600000,
+      id: 'task_hotel_patrol_303',
+      requester: 'Hotel_Security',
+      unix_millis_request_time: Date.now() - 60000,
+      labels: ['patrol_floor=L3', 'type=corridor_check'],
     },
     category: 'patrol',
     assigned_to: {
-      group: 'TinyRobotFleet',
-      name: 'tinyRobot_01',
+      group: 'tinyRobot',
+      name: 'tinyBot_1',
     },
-    status: 'completed',
-    progress: 100,
-    unix_millis_start_time: Date.now() - 3500000,
-    unix_millis_finish_time: Date.now() - 2900000,
+    status: 'queued',
+    progress: 0,
   },
 ];
 
 export const INITIAL_DOOR_STATES: Record<string, DoorState> = {
-  n01_door: {
-    door_name: 'n01_door',
-    current_mode: { value: 0 },
-    mode_string: 'closed',
-    door_time: Date.now(),
+  // L1 Doors
+  L1_door1: { door_name: 'L1_door1', current_mode: { value: 0 }, mode_string: 'closed', door_time: Date.now() },
+  L1_door2: { door_name: 'L1_door2', current_mode: { value: 0 }, mode_string: 'closed', door_time: Date.now() },
+  L1_door3: { door_name: 'L1_door3', current_mode: { value: 2 }, mode_string: 'open', door_time: Date.now() },
+  L1_door4: { door_name: 'L1_door4', current_mode: { value: 0 }, mode_string: 'closed', door_time: Date.now() },
+  L1_door5: { door_name: 'L1_door5', current_mode: { value: 0 }, mode_string: 'closed', door_time: Date.now() },
+  // L2 Doors
+  L2_door2: { door_name: 'L2_door2', current_mode: { value: 0 }, mode_string: 'closed', door_time: Date.now() },
+  L2_door5: { door_name: 'L2_door5', current_mode: { value: 0 }, mode_string: 'closed', door_time: Date.now() },
+  L2_door9: { door_name: 'L2_door9', current_mode: { value: 0 }, mode_string: 'closed', door_time: Date.now() },
+  L2_door11: { door_name: 'L2_door11', current_mode: { value: 0 }, mode_string: 'closed', door_time: Date.now() },
+  L2_door12: { door_name: 'L2_door12', current_mode: { value: 0 }, mode_string: 'closed', door_time: Date.now() },
+  L2_door14: { door_name: 'L2_door14', current_mode: { value: 0 }, mode_string: 'closed', door_time: Date.now() },
+  L2_door15: { door_name: 'L2_door15', current_mode: { value: 0 }, mode_string: 'closed', door_time: Date.now() },
+  // L3 Doors
+  L3_door2: { door_name: 'L3_door2', current_mode: { value: 0 }, mode_string: 'closed', door_time: Date.now() },
+  L3_door5: { door_name: 'L3_door5', current_mode: { value: 0 }, mode_string: 'closed', door_time: Date.now() },
+  L3_door9: { door_name: 'L3_door9', current_mode: { value: 0 }, mode_string: 'closed', door_time: Date.now() },
+  L3_door11: { door_name: 'L3_door11', current_mode: { value: 0 }, mode_string: 'closed', door_time: Date.now() },
+  L3_door12: { door_name: 'L3_door12', current_mode: { value: 0 }, mode_string: 'closed', door_time: Date.now() },
+  L3_door14: { door_name: 'L3_door14', current_mode: { value: 0 }, mode_string: 'closed', door_time: Date.now() },
+  L3_door15: { door_name: 'L3_door15', current_mode: { value: 0 }, mode_string: 'closed', door_time: Date.now() },
+};
+
+export const INITIAL_LIFT_STATES: Record<string, LiftState> = {
+  Lift1: {
+    lift_name: 'Lift1',
+    current_floor: 'L1',
+    destination_floor: 'L2',
+    door_state: 'closed',
+    motion_state: 'up',
+    available_floors: ['L1', 'L2', 'L3'],
+    current_mode: 0,
   },
-  n02_door: {
-    door_name: 'n02_door',
-    current_mode: { value: 0 },
-    mode_string: 'closed',
-    door_time: Date.now(),
-  },
-  s04_door: {
-    door_name: 's04_door',
-    current_mode: { value: 0 },
-    mode_string: 'closed',
-    door_time: Date.now(),
-  },
-  s08_door: {
-    door_name: 's08_door',
-    current_mode: { value: 0 },
-    mode_string: 'closed',
-    door_time: Date.now(),
-  },
-  zone_4_door: {
-    door_name: 'zone_4_door',
-    current_mode: { value: 2 },
-    mode_string: 'open',
-    door_time: Date.now(),
+  Lift2: {
+    lift_name: 'Lift2',
+    current_floor: 'L1',
+    destination_floor: 'L1',
+    door_state: 'closed',
+    motion_state: 'stopped',
+    available_floors: ['L1', 'L2', 'L3'],
+    current_mode: 0,
   },
 };
 
-export const INITIAL_LIFT_STATES: Record<string, LiftState> = {};
-
 export const INITIAL_WORKCELLS: WorkcellItem[] = [
   {
-    guid: 'coke_dispenser',
+    guid: 'kitchen_dispenser',
+    category: 'dispenser',
+    state: 'busy',
+    location_level: 'L1',
+    x: 19.59,
+    y: -9.57,
+    payload_capacity: 10,
+    current_payload: 'Gourmet_VIP_Meal_Set',
+  },
+  {
+    guid: 'restaurant_dispenser',
     category: 'dispenser',
     state: 'idle',
     location_level: 'L1',
-    x: 94.2,
-    y: -44.3,
-    payload_capacity: 20,
-    current_payload: 'Beverage_Batch_Airport',
+    x: 19.59,
+    y: -15.81,
+    payload_capacity: 15,
+    current_payload: 'Beverage_Champagne_Service',
   },
   {
-    guid: 'coke_dispenser_2',
-    category: 'dispenser',
-    state: 'idle',
-    location_level: 'L1',
-    x: 122.9,
-    y: -50.8,
-    payload_capacity: 20,
-    current_payload: 'Beverage_Batch_Zone4',
-  },
-  {
-    guid: 'mopcart_dispenser',
-    category: 'dispenser',
-    state: 'idle',
-    location_level: 'L1',
-    x: 159.7,
-    y: -55.6,
-    payload_capacity: 5,
-    current_payload: 'Sanitization_Cart_E',
-  },
-  {
-    guid: 'coke_ingestor',
+    guid: 'suite_ingestor_L2',
     category: 'ingestor',
     state: 'idle',
-    location_level: 'L1',
-    x: 14.8,
-    y: -9.3,
-    payload_capacity: 20,
+    location_level: 'L2',
+    x: 4.14,
+    y: -33.21,
+    payload_capacity: 10,
   },
   {
-    guid: 'coke_ingestor_2',
+    guid: 'suite_ingestor_L3',
     category: 'ingestor',
     state: 'idle',
-    location_level: 'L1',
-    x: 152.3,
-    y: -44.3,
-    payload_capacity: 20,
-  },
-  {
-    guid: 'mopcart_collector',
-    category: 'ingestor',
-    state: 'idle',
-    location_level: 'L1',
-    x: 163.4,
-    y: -55.6,
-    payload_capacity: 5,
+    location_level: 'L3',
+    x: 4.14,
+    y: -33.21,
+    payload_capacity: 10,
   },
 ];
 

@@ -174,14 +174,24 @@ export const FmsProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
       const syncLiveBackend = async () => {
         try {
-          const [f, t, m, doors, disp, ing] = await Promise.all([
+          const [fleetResult, taskResult, mapResult, doorResult, liftResult, dispenserResult, ingestorResult] =
+            await Promise.allSettled([
             rmfClient.getFleets(),
             rmfClient.getTasks(),
             rmfClient.getBuildingMap(),
             rmfClient.getDoors(),
+            rmfClient.getLifts(),
             rmfClient.getDispensers(),
             rmfClient.getIngestors(),
           ]);
+
+          const f = fleetResult.status === 'fulfilled' ? fleetResult.value : null;
+          const t = taskResult.status === 'fulfilled' ? taskResult.value : null;
+          const m = mapResult.status === 'fulfilled' ? mapResult.value : null;
+          const doors = doorResult.status === 'fulfilled' ? doorResult.value : null;
+          const lifts = liftResult.status === 'fulfilled' ? liftResult.value : null;
+          const disp = dispenserResult.status === 'fulfilled' ? dispenserResult.value : null;
+          const ing = ingestorResult.status === 'fulfilled' ? ingestorResult.value : null;
 
           if (f && f.length > 0) {
             setFleets(f);
@@ -189,17 +199,29 @@ export const FmsProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           }
           if (t) setTasks(t);
           if (m && m.levels.length > 0) setBuildingMap(m);
-          if (disp && ing) {
+          if (disp && ing && (disp.length > 0 || ing.length > 0)) {
             setWorkcells([...disp, ...ing]);
           }
 
-          if (doors && doors.length > 0) {
-            for (const d of doors) {
-              try {
-                const s = await rmfClient.getDoorState(d.name);
-                setDoorStates((prev) => ({ ...prev, [d.name]: s }));
-              } catch {}
-            }
+          if (doors) {
+            const states = await Promise.allSettled(
+              doors.map((door) => rmfClient.getDoorState(door.name)),
+            );
+            const nextDoorStates: Record<string, DoorState> = {};
+            states.forEach((result, index) => {
+              if (result.status === 'fulfilled') {
+                nextDoorStates[doors[index].name] = result.value;
+              }
+            });
+            setDoorStates(nextDoorStates);
+          }
+
+          if (lifts) {
+            const nextLiftStates: Record<string, LiftState> = {};
+            lifts.forEach((lift) => {
+              nextLiftStates[lift.lift_name] = lift;
+            });
+            setLiftStates(nextLiftStates);
           }
         } catch (err) {
           console.warn('Sync live backend warning:', err);
@@ -276,11 +298,21 @@ export const FmsProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       },
     }));
 
-    if (!settings.simulationMode && isBackendConnected) {
+    // REST door commands do not depend on the Socket.IO connection state.
+    if (!settings.simulationMode) {
       try {
-        await rmfClient.requestDoor(doorName, nextModeValue);
+        await rmfClient.requestDoor(doorName, !isCurrentlyOpen);
       } catch (e) {
         console.error('Failed to request door to server', e);
+        setDoorStates((prev) => ({
+          ...prev,
+          [doorName]: current || {
+            door_name: doorName,
+            current_mode: { value: isCurrentlyOpen ? 2 : 0 },
+            mode_string: isCurrentlyOpen ? 'open' : 'closed',
+            door_time: Date.now(),
+          },
+        }));
       }
     }
   };
@@ -429,7 +461,7 @@ export const FmsProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           if (freshTasks && freshTasks.length > 0) {
             setTasks(freshTasks);
           }
-        } catch {}
+        } catch { }
 
         return resp;
       } catch (e: any) {
@@ -469,10 +501,10 @@ export const FmsProvider: React.FC<{ children: React.ReactNode }> = ({ children 
             form.category === 'patrol'
               ? `Patrol waypoints: ${form.patrolWaypoints.join(' -> ')} (${form.rounds} rounds)`
               : form.category === 'delivery'
-              ? `Delivery from ${form.pickupPlace} to ${form.dropoffPlace}`
-              : form.category === 'clean'
-              ? `Clean zone: ${form.cleanZone}`
-              : `Navigate to ${form.destinationWaypoint}`,
+                ? `Delivery from ${form.pickupPlace} to ${form.dropoffPlace}`
+                : form.category === 'clean'
+                  ? `Clean zone: ${form.cleanZone}`
+                  : `Navigate to ${form.destinationWaypoint}`,
           status: 'pending',
         },
       ],

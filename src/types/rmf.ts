@@ -131,6 +131,8 @@ export interface NavGraph {
   name: string;
   vertices: MapVertex[];
   lanes: MapLane[];
+  // Some FMS APIs expose only waypoint names, without graph coordinates.
+  waypoint_names?: string[];
 }
 
 export type DoorMode = 'closed' | 'moving' | 'open' | 'offline' | 'unknown';

@@ -58,12 +58,16 @@ export const TaskDispatcherModal: React.FC<TaskDispatcherModalProps> = ({
     );
   }, [fleets]);
 
-  // Extract all valid waypoint names from nav graph
+  // Extract all valid waypoint names from nav graph across all levels
   const allWaypoints = useMemo<string[]>(() => {
-    const currentLevel = buildingMap.levels?.[0];
     const extracted =
-      currentLevel?.nav_graphs?.flatMap((g) =>
-        g.vertices.map((v) => v.name).filter((n): n is string => Boolean(n))
+      buildingMap.levels?.flatMap((lvl) =>
+        lvl.nav_graphs?.flatMap((g) =>
+          [
+            ...g.vertices.map((v) => v.name).filter((n): n is string => Boolean(n)),
+            ...(g.waypoint_names || []),
+          ]
+        ) || []
       ) || [];
     return extracted.length > 0 ? Array.from(new Set(extracted)) : FALLBACK_WAYPOINTS;
   }, [buildingMap]);
@@ -71,12 +75,12 @@ export const TaskDispatcherModal: React.FC<TaskDispatcherModalProps> = ({
   // Extract dispensers and ingestors
   const availableDispensers = useMemo(() => {
     const list = workcells.filter((w) => w.category === 'dispenser').map((w) => w.guid);
-    return list.length > 0 ? list : ['coke_dispenser', 'coke_dispenser_2'];
+    return list.length > 0 ? list : ['coke_dispenser', 'kitchen_dispenser'];
   }, [workcells]);
 
   const availableIngestors = useMemo(() => {
     const list = workcells.filter((w) => w.category === 'ingestor').map((w) => w.guid);
-    return list.length > 0 ? list : ['coke_ingestor', 'coke_ingestor_2'];
+    return list.length > 0 ? list : ['coke_ingestor', 'suite_ingestor_L2'];
   }, [workcells]);
 
   // Form states with default real Open-RMF values
@@ -106,20 +110,27 @@ export const TaskDispatcherModal: React.FC<TaskDispatcherModalProps> = ({
     if (isOpen && allWaypoints.length > 0) {
       setErrorMessage(null);
       setSuccessMessage(null);
-      const isAirport = (buildingMap.name || '').toLowerCase().includes('airport');
 
-      const defPickup = allWaypoints.includes('s08')
+      const defPickup = allWaypoints.includes('kitchen')
+        ? 'kitchen'
+        : allWaypoints.includes('s08')
         ? 's08'
         : allWaypoints.includes('pantry')
         ? 'pantry'
-        : allWaypoints[0] || 's08';
-      const defDropoff = allWaypoints.includes('n13')
+        : allWaypoints[0] || 'kitchen';
+
+      const defDropoff = allWaypoints.includes('L2_master_suite')
+        ? 'L2_master_suite'
+        : allWaypoints.includes('n13')
         ? 'n13'
         : allWaypoints.includes('zone_4')
         ? 'zone_4'
         : allWaypoints[1] || defPickup;
+
       const defPatrol: string[] =
-        allWaypoints.includes('zone_1') && allWaypoints.includes('zone_2')
+        allWaypoints.includes('lobby') && allWaypoints.includes('restaurant')
+          ? ['lobby', 'restaurant']
+          : allWaypoints.includes('zone_1') && allWaypoints.includes('zone_2')
           ? ['zone_1', 'zone_2']
           : allWaypoints.slice(0, 2).length > 0
           ? allWaypoints.slice(0, 2)
@@ -134,8 +145,12 @@ export const TaskDispatcherModal: React.FC<TaskDispatcherModalProps> = ({
       if (!allWaypoints.includes(destinationWaypoint)) {
         setDestinationWaypoint(defPickup);
       }
-      if (cleanZone === 'clean_zone' && allWaypoints.includes('zone_1')) {
-        setCleanZone('zone_1');
+      if (cleanZone === 'clean_zone') {
+        if (allWaypoints.includes('clean_lobby')) {
+          setCleanZone('clean_lobby');
+        } else if (allWaypoints.includes('zone_1')) {
+          setCleanZone('zone_1');
+        }
       }
       if (patrolWaypoints.length === 0 || !allWaypoints.includes(patrolWaypoints[0])) {
         setPatrolWaypoints(defPatrol);

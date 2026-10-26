@@ -19,6 +19,7 @@ import { useFms } from '../../context/FmsContext';
 import { RobotState } from '../../types/rmf';
 import officeModelsData from '../../data/officeModels.json';
 import airportModelsData from '../../data/airportModels.json';
+import hotelModelsData from '../../data/hotelModels.json';
 
 interface ThreeDigitalTwin3DProps {
   onSelectRobot?: (robot: RobotState | null) => void;
@@ -81,17 +82,26 @@ export const ThreeDigitalTwin3D: React.FC<ThreeDigitalTwin3DProps> = ({ onSelect
     const hasFloatOrNeg = (n?: number) => n !== undefined && (n < 0 || Math.floor(n) !== n);
     const firstVert = currentLevel.nav_graphs?.[0]?.vertices?.[0];
     const firstWall = currentLevel.wall_segments?.[0];
+    const firstRobot = fleets.flatMap((fleet) => fleet.robots)
+      .find((robot) => robot.location.level_name === selectedFloor);
     if (
       hasFloatOrNeg(firstVert?.y) ||
       hasFloatOrNeg(firstVert?.x) ||
       hasFloatOrNeg(firstWall?.y1) ||
-      hasFloatOrNeg(firstWall?.x1)
+      hasFloatOrNeg(firstWall?.x1) ||
+      hasFloatOrNeg(firstRobot?.location.x) ||
+      hasFloatOrNeg(firstRobot?.location.y)
     ) {
       return true;
     }
     const nameLower = (buildingMap.name || '').toLowerCase();
-    return nameLower.includes('airport') || nameLower.includes('terminal') || nameLower.includes('office');
-  }, [buildingMap.name, currentLevel]);
+    return (
+      nameLower.includes('airport') ||
+      nameLower.includes('terminal') ||
+      nameLower.includes('office') ||
+      nameLower.includes('hotel')
+    );
+  }, [buildingMap.name, currentLevel, fleets, selectedFloor]);
 
   // Metric centering offset & dimensions
   const originOffset = useMemo(() => {
@@ -111,6 +121,14 @@ export const ThreeDigitalTwin3D: React.FC<ThreeDigitalTwin3DProps> = ({ onSelect
         maxY = Math.max(maxY, v.y);
       });
     });
+    fleets.flatMap((fleet) => fleet.robots)
+      .filter((robot) => robot.location.level_name === selectedFloor)
+      .forEach((robot) => {
+        minX = Math.min(minX, robot.location.x);
+        maxX = Math.max(maxX, robot.location.x);
+        minY = Math.min(minY, robot.location.y);
+        maxY = Math.max(maxY, robot.location.y);
+      });
     if (minX === 99999) { minX = 0; maxX = 280; minY = -65; maxY = 0; }
     return {
       cx: (minX + maxX) / 2,
@@ -119,7 +137,7 @@ export const ThreeDigitalTwin3D: React.FC<ThreeDigitalTwin3DProps> = ({ onSelect
       width: Math.max(1, maxX - minX),
       height: Math.max(1, maxY - minY),
     };
-  }, [currentLevel]);
+  }, [currentLevel, fleets, selectedFloor]);
 
   // Coordinate mapper from RMF map to Three.js (meters, X: right, Y: up, Z: toward viewer)
   const mapToThreePos = useCallback((x: number, y: number): { x: number; z: number } => {
@@ -445,8 +463,9 @@ export const ThreeDigitalTwin3D: React.FC<ThreeDigitalTwin3DProps> = ({ onSelect
       });
     }
 
-    // --- 4. Environment Props (Office & Airport Terminal) ---
+    // --- 4. Environment Props (Office, Airport Terminal, Hotel) ---
     const isAirport = (buildingMap.name || '').toLowerCase().includes('airport') || (buildingMap.name || '').toLowerCase().includes('terminal');
+    const isHotel = (buildingMap.name || '').toLowerCase().includes('hotel');
     const isOffice = (buildingMap.name || '').toLowerCase().includes('office');
 
     if (showDemoProps) {
@@ -577,6 +596,48 @@ export const ThreeDigitalTwin3D: React.FC<ThreeDigitalTwin3DProps> = ({ onSelect
         return p;
       };
 
+      // Hotel Bed builder
+      const buildBed = () => {
+        const bed = new THREE.Group();
+        const frame = new THREE.Mesh(new THREE.BoxGeometry(1.6, 0.35, 2.1), woodMat);
+        frame.position.y = 0.175;
+        bed.add(frame);
+        const mattress = new THREE.Mesh(new THREE.BoxGeometry(1.5, 0.25, 2.0), deskTopMat);
+        mattress.position.y = 0.45;
+        bed.add(mattress);
+        const pillow1 = new THREE.Mesh(new THREE.BoxGeometry(0.55, 0.08, 0.35), deskTopMat);
+        pillow1.position.set(-0.35, 0.6, -0.7);
+        const pillow2 = new THREE.Mesh(new THREE.BoxGeometry(0.55, 0.08, 0.35), deskTopMat);
+        pillow2.position.set(0.35, 0.6, -0.7);
+        bed.add(pillow1, pillow2);
+        const headboard = new THREE.Mesh(new THREE.BoxGeometry(1.65, 0.9, 0.08), woodMat);
+        headboard.position.set(0, 0.55, -1.02);
+        bed.add(headboard);
+        return bed;
+      };
+
+      // Hotel Toilet builder
+      const buildToilet = () => {
+        const t = new THREE.Group();
+        const base = new THREE.Mesh(new THREE.BoxGeometry(0.38, 0.4, 0.55), cabinetMat);
+        base.position.y = 0.2;
+        const tank = new THREE.Mesh(new THREE.BoxGeometry(0.38, 0.45, 0.2), cabinetMat);
+        tank.position.set(0, 0.5, -0.2);
+        t.add(base, tank);
+        return t;
+      };
+
+      // Hotel Sofa builder
+      const buildSofa = () => {
+        const s = new THREE.Group();
+        const seat = new THREE.Mesh(new THREE.BoxGeometry(1.8, 0.4, 0.8), chairBlueMat);
+        seat.position.y = 0.25;
+        const back = new THREE.Mesh(new THREE.BoxGeometry(1.8, 0.5, 0.2), chairBlueMat);
+        back.position.set(0, 0.6, -0.32);
+        s.add(seat, back);
+        return s;
+      };
+
       // 4A. If Office map: render office models
       if (isOffice && Array.isArray(officeModelsData)) {
         (officeModelsData as any[]).forEach((m) => {
@@ -671,6 +732,53 @@ export const ThreeDigitalTwin3D: React.FC<ThreeDigitalTwin3DProps> = ({ onSelect
           }
         });
       }
+
+      // 4C. If Hotel map: render 3-floor hotel models (beds, desks, chairs, bathrooms)
+      if (isHotel && Array.isArray(hotelModelsData)) {
+        (hotelModelsData as any[]).forEach((m) => {
+          if (m.level_name && m.level_name !== selectedFloor) return;
+          const p = mapToThreePos(m.x, m.y);
+          const modelName = m.model_name || '';
+          let meshObj: THREE.Group | THREE.Mesh | null = null;
+
+          if (modelName.includes('Bed')) {
+            meshObj = buildBed();
+          } else if (modelName.includes('Toilet')) {
+            meshObj = buildToilet();
+          } else if (modelName.includes('Sofa') || modelName.includes('Bench')) {
+            meshObj = buildSofa();
+          } else if (modelName.includes('Desk') || modelName.includes('Table')) {
+            const tableGrp = new THREE.Group();
+            const top = new THREE.Mesh(new THREE.BoxGeometry(1.4, 0.05, 0.75), woodMat);
+            top.position.y = 0.72;
+            tableGrp.add(top);
+            [[-0.6, -0.3], [0.6, -0.3], [-0.6, 0.3], [0.6, 0.3]].forEach(([lx, lz]) => {
+              const leg = new THREE.Mesh(new THREE.CylinderGeometry(0.02, 0.02, 0.72, 8), deskLegMat);
+              leg.position.set(lx, 0.36, lz);
+              tableGrp.add(leg);
+            });
+            meshObj = tableGrp;
+          } else if (modelName.includes('Chair')) {
+            meshObj = buildChair(chairBlueMat);
+          } else if (
+            modelName.includes('Fridge') ||
+            modelName.includes('StorageRack') ||
+            modelName.includes('VendingMachine')
+          ) {
+            meshObj = new THREE.Mesh(new THREE.BoxGeometry(0.8, 1.7, 0.7), metalCabinetMat);
+            meshObj.position.y = 0.85;
+          } else if (modelName.includes('BathroomSink') || modelName.includes('KitchenCountertop')) {
+            meshObj = new THREE.Mesh(new THREE.BoxGeometry(0.9, 0.85, 0.6), cabinetMat);
+            meshObj.position.y = 0.425;
+          }
+
+          if (meshObj) {
+            meshObj.position.set(p.x, meshObj.position.y || 0, p.z);
+            meshObj.rotation.y = m.yaw || 0;
+            group.add(meshObj);
+          }
+        });
+      }
     }
 
     // --- 5. Interactive 3D Doors ---
@@ -700,7 +808,63 @@ export const ThreeDigitalTwin3D: React.FC<ThreeDigitalTwin3DProps> = ({ onSelect
         group.add(doorMesh);
       });
     }
-  }, [currentLevel, mapToThreePos, showWalls, showWaypoints, showLanes, showLabels, showDemoProps, doorStates, buildingMap.name]);
+
+    // --- 6. 3D Elevator Shafts & Cabins ---
+    if (buildingMap.lifts && buildingMap.lifts.length > 0) {
+      buildingMap.lifts.forEach((lift) => {
+        const rx = lift.ref_x !== undefined ? lift.ref_x : 0;
+        const ry = lift.ref_y !== undefined ? lift.ref_y : 0;
+        const p = mapToThreePos(rx, ry);
+        const liftW = lift.width || 2.7;
+        const liftD = lift.depth || 2.7;
+
+        // Semi-transparent glass elevator cabin
+        const cabinGeo = new THREE.BoxGeometry(liftW * 0.95, 2.4, liftD * 0.95);
+        const cabinMat = new THREE.MeshStandardMaterial({
+          color: 0x8B5CF6,
+          transparent: true,
+          opacity: 0.35,
+          roughness: 0.2,
+          metalness: 0.8,
+        });
+        const cabinMesh = new THREE.Mesh(cabinGeo, cabinMat);
+        cabinMesh.position.set(p.x, 1.2, p.z);
+        group.add(cabinMesh);
+
+        // Cabin glowing violet wireframe
+        const edges = new THREE.LineSegments(
+          new THREE.EdgesGeometry(cabinGeo),
+          new THREE.LineBasicMaterial({ color: 0xC084FC })
+        );
+        edges.position.copy(cabinMesh.position);
+        group.add(edges);
+
+        // Elevator status label
+        const curFloor = liftStates[lift.name]?.current_floor || selectedFloor;
+        const label = createTextSprite(
+          `${lift.name} [${curFloor}]`,
+          '#C084FC',
+          'rgba(139, 92, 246, 0.35)'
+        );
+        label.scale.set(1.8, 0.45, 1);
+        label.position.set(p.x, 2.7, p.z);
+        group.add(label);
+      });
+    }
+  }, [
+    currentLevel,
+    mapToThreePos,
+    showWalls,
+    showWaypoints,
+    showLanes,
+    showLabels,
+    showDemoProps,
+    doorStates,
+    liftStates,
+    buildingMap.name,
+    buildingMap.lifts,
+    selectedFloor,
+  ]);
 
   // Main Three.js Scene Initialization
   useEffect(() => {
@@ -711,7 +875,8 @@ export const ThreeDigitalTwin3D: React.FC<ThreeDigitalTwin3DProps> = ({ onSelect
     const scene = new THREE.Scene();
     scene.background = new THREE.Color(0x07090E);
     const isLarge = (originOffset.width || 0) > 120;
-    scene.fog = new THREE.FogExp2(0x07090E, isLarge ? 0.0022 : 0.015);
+    const isMedium = (originOffset.width || 0) > 25;
+    scene.fog = new THREE.FogExp2(0x07090E, isLarge ? 0.0022 : 0.012);
     sceneRef.current = scene;
 
     // Camera
@@ -723,6 +888,8 @@ export const ThreeDigitalTwin3D: React.FC<ThreeDigitalTwin3DProps> = ({ onSelect
     );
     if (isLarge) {
       camera.position.set(0, 105, 125);
+    } else if (isMedium) {
+      camera.position.set(0, 34, 40);
     } else {
       camera.position.set(18, 22, 24);
     }
@@ -968,7 +1135,8 @@ export const ThreeDigitalTwin3D: React.FC<ThreeDigitalTwin3DProps> = ({ onSelect
     if (!camera || !controls) return;
 
     const isLarge = (originOffset.width || 0) > 120;
-    const d = isLarge ? 115 : 25;
+    const isMedium = (originOffset.width || 0) > 25;
+    const d = isLarge ? 115 : isMedium ? 36 : 25;
 
     if (preset === 'top') {
       camera.position.set(0, d * 1.35, 0.001);

@@ -21,10 +21,24 @@ export const InfrastructureView: React.FC = () => {
     mutexGroups,
     toggleDoor,
     callLift,
+    settings,
   } = useFms();
 
-  const allDoors = buildingMap.levels.flatMap((lvl) => lvl.doors);
-  const lifts = buildingMap.lifts;
+  const mapDoors = buildingMap.levels.flatMap((lvl) => lvl.doors);
+  const allDoors = Array.from(new Set([...mapDoors.map((door) => door.name), ...Object.keys(doorStates)]))
+    .map((name) => mapDoors.find((door) => door.name === name) || {
+      name,
+      door_type: 1,
+      motion_range: 0,
+      motion_direction: 1,
+      level_name: 'L1',
+    });
+  const lifts = Array.from(new Set([...buildingMap.lifts.map((lift) => lift.name), ...Object.keys(liftStates)]))
+    .map((name) => buildingMap.lifts.find((lift) => lift.name === name) || {
+      name,
+      levels: liftStates[name]?.available_floors || [],
+      doors: [],
+    });
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '28px' }}>
@@ -212,8 +226,8 @@ export const InfrastructureView: React.FC = () => {
                     </div>
                   </div>
 
-                  {/* Floor Call Simulation Buttons */}
-                  <div>
+                  {/* Lift control is only simulated until the backend exposes a command endpoint. */}
+                  {settings.simulationMode ? <div>
                     <span
                       style={{
                         display: 'block',
@@ -242,7 +256,11 @@ export const InfrastructureView: React.FC = () => {
                         );
                       })}
                     </div>
-                  </div>
+                  </div> : (
+                    <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>
+                      Live status from RMF · Lift command API is not available
+                    </div>
+                  )}
                 </div>
               );
             })}
