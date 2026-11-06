@@ -3,6 +3,7 @@
 export type NavigationTab =
   | 'overview'
   | 'map'
+  | 'setup'
   | 'traffic-editor'
   | 'fleets'
   | 'tasks'
@@ -30,6 +31,7 @@ export interface MapLayerConfig {
   showLifts: boolean;
   showLabels: boolean;
   showGrid: boolean;
+  darkFloorplan: boolean;
 }
 
 export interface DispatchTaskFormData {
